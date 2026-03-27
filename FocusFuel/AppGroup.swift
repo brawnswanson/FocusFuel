@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+enum AppGroup {
+    static let identifier  = "group.com.yourname.focusfuel"
+    static let selectionKey = "focusfuel.activitySelection"
+}

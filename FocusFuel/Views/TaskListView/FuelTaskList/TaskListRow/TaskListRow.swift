@@ -12,9 +12,11 @@ struct TaskListRow: View {
 
     @Environment(\.modelContext) var context
     var task: FuelTask
-     
+    var fuelBalance: FuelBalance
+    
     var body: some View {
-        Button(action: {task.isCompleted.toggle()
+        Button(action: {
+            changeTaskStatus()
             saveContext()
         }) {
             HStack(spacing:14) {
@@ -25,15 +27,17 @@ struct TaskListRow: View {
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 14)
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(task.difficulty.accentColor.opacity(task.isCompleted ? 0.03 : 0.25))
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                   .stroke(task.difficulty.borderColor.opacity(task.isCompleted ? 0.1 : 0.25), lineWidth: 1)
-            )
         }
+        .taskRowStyle(isCompleted: task.isCompleted, tier: task.difficulty.tier)
+    }
+    
+    func changeTaskStatus() {
+        if task.isCompleted {
+            fuelBalance.currentBalance -= task.difficulty.fuelReward
+        } else {
+            fuelBalance.currentBalance += task.difficulty.fuelReward
+        }
+        task.isCompleted.toggle()
     }
     
     func saveContext() {

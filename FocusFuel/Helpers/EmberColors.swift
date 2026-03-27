@@ -7,32 +7,33 @@ import SwiftUI
 //   RoundedRectangle(cornerRadius: 12).fill(Color.surface)
 //   Circle().fill(Color.Tier.boss.default)
 
-/*extension Color {
-
-    // MARK: Surfaces
-    static let appBackground  = Color("appBackground")   // #F7F3EE — screen/page fill
-    static let surface        = Color("surface")         // #FFFFFF — cards, sheets, modals
-    static let surfaceSubtle  = Color("surfaceSubtle")   // #EDE9E3 — input bg, dividers, pressed states
-    static let surfaceInverse = Color("surfaceInverse")  // #2C2C2A — toasts, tooltips, dark sheets
-
-    // MARK: Typography
-    static let textPrimary    = Color("textPrimary")     // #2C2C2A — headings, task titles, labels
-    static let textSecondary  = Color("textSecondary")   // #5F5E5A — subtitles, metadata, descriptions
-    static let textTertiary   = Color("textTertiary")    // #888780 — placeholders, hints, disabled
-    static let textInverse    = Color("textInverse")     // #F7F3EE — text on dark surfaces
-
-    // MARK: Accent / Fuel (purple)
-    static let accentDefault  = Color("accentDefault")   // #534AB7 — primary buttons, links, Fuel counter
-    static let accentLight    = Color("accentLight")     // #7F77DD — hover/pressed highlights
-    static let accentDark     = Color("accentDark")      // #3C3489 — deep pressed state, focus rings
-    static let accentSubtle   = Color("accentSubtle")    // #EEEDFE — tinted backgrounds, badges
-    static let accentText     = Color("accentText")      // #26215C — text on accentSubtle backgrounds
-
-    // MARK: Borders
-    static let borderSubtle   = Color("borderSubtle")    // #D3D1C7 — default card/input border
-    static let borderDefault  = Color("borderDefault")   // #B4B2A9 — emphasis border
-    static let borderStrong   = Color("borderStrong")    // #888780 — focus rings, active borders
-} */
+extension Color {
+    struct Ember {
+        // MARK: Surfaces
+        static let appBackground  = Color("appBackground")   // #F7F3EE — screen/page fill
+        static let surface        = Color("surface")         // #FFFFFF — cards, sheets, modals
+        static let surfaceSubtle  = Color("surfaceSubtle")   // #EDE9E3 — input bg, dividers, pressed states
+        static let surfaceInverse = Color("surfaceInverse")  // #2C2C2A — toasts, tooltips, dark sheets
+        
+        // MARK: Typography
+        static let textPrimary    = Color("textPrimary")     // #2C2C2A — headings, task titles, labels
+        static let textSecondary  = Color("textSecondary")   // #5F5E5A — subtitles, metadata, descriptions
+        static let textTertiary   = Color("textTertiary")    // #888780 — placeholders, hints, disabled
+        static let textInverse    = Color("textInverse")     // #F7F3EE — text on dark surfaces
+        
+        // MARK: Accent / Fuel (purple)
+        static let accentDefault  = Color("accentDefault")   // #534AB7 — primary buttons, links, Fuel counter
+        static let accentLight    = Color("accentLight")     // #7F77DD — hover/pressed highlights
+        static let accentDark     = Color("accentDark")      // #3C3489 — deep pressed state, focus rings
+        static let accentSubtle   = Color("accentSubtle")    // #EEEDFE — tinted backgrounds, badges
+        static let accentText     = Color("accentText")      // #26215C — text on accentSubtle backgrounds
+        
+        // MARK: Borders
+        static let borderSubtle   = Color("borderSubtle")    // #D3D1C7 — default card/input border
+        static let borderDefault  = Color("borderDefault")   // #B4B2A9 — emphasis border
+        static let borderStrong   = Color("borderStrong")    // #888780 — focus rings, active borders
+    }
+}
 
 // MARK: - Tier Colors
 

@@ -30,11 +30,5 @@ struct FuelBadge: View {
         .padding(.vertical, 10)
         .background(.yellow.opacity(0.12), in: RoundedRectangle(cornerRadius: 14))
         .overlay(RoundedRectangle(cornerRadius: 14).stroke(.yellow.opacity(0.3), lineWidth: 1))
-        .onAppear {
-            if fuelBalance.count == 0 {
-                let newFuelBalance = FuelBalance()
-                context.insert(newFuelBalance)
-            }
-        }
     }
 }

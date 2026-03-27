@@ -12,6 +12,7 @@ struct TaskListView: View {
     
     @Environment(\.modelContext) var context
     @Query var tasks: [FuelTask]
+    @Query var fuelBalances: [FuelBalance]
     
     @State private var isAddTaskSheetPresented: Bool = false
     @State private var selectedFilter: Difficulty? = nil
@@ -28,6 +29,13 @@ struct TaskListView: View {
         filterTasks(tasks, by: selectedFilter).filter { $0.isCompleted == true }
     }
     
+    var fuelBalance: FuelBalance {
+        if let first = fuelBalances.first {
+            return first
+        } else {
+            fatalError("No FuelBalance found")
+        }
+    }
     
     var body: some View {
         NavigationStack {
@@ -43,7 +51,7 @@ struct TaskListView: View {
                 }
                 FilterChipBar(selectedFilter: $selectedFilter)
                     .padding(.vertical, 4.0)
-                FuelTaskList(pendingTasks: pendingTasks, completedTasks: completedTasks)
+                FuelTaskList(pendingTasks: pendingTasks, completedTasks: completedTasks, fuelBalance: fuelBalance)
                 AddTaskButton(isPresented: $isAddTaskSheetPresented)
             }
             .padding(.horizontal, 8.0)

@@ -13,16 +13,13 @@ struct AddTaskButton: View {
     
     var body: some View {
         Button(action: { isPresented.toggle()}) {
-            HStack {
+            HStack(spacing: 8) {
                 Image(systemName: "plus")
                 Text("Add Task")
             }
-            .foregroundStyle(.black)
-            .font(.title)
-            .padding(.horizontal, 8.0)
-            .padding(.vertical, 6.0)
         }
-        .background(.green.opacity(0.75), in: Capsule())
-        .shadow(color: .green.opacity(0.4), radius: 12, y: 4)
+        .buttonStyle(AddTaskButtonStyle())
+        .shadow(color: Color.Ember.accentDefault.opacity(0.3), radius: 12, x: 0, y: 4)
+        .padding(.bottom, 8)
     }
 }

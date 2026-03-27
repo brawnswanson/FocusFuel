@@ -13,6 +13,14 @@ enum Difficulty: String, CaseIterable, Codable {
     case medium = "medium"
     case quick = "quick"
     
+    var tier: Color.Tier {
+        switch self {
+        case .boss:   return .boss
+        case .medium: return .medium
+        case .quick:  return .quick
+        }
+    }
+    
     var accentColor: Color {
         switch self {
         case .boss: return Color.Tier.boss.default

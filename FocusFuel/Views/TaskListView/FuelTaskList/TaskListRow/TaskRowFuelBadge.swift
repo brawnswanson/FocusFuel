@@ -10,10 +10,10 @@ import SwiftUI
 struct TaskRowFuelBadge: View {
     
     var task: FuelTask
-    
+
     var body: some View {
         VStack(spacing: 2) {
-            Text("+\(45)")
+            Text("\(task.difficulty.fuelReward)")
                 .font(.subheadline.bold())
                 .foregroundStyle(task.isCompleted ? Color.secondary.opacity(0.5) : .yellow)
             Image(systemName: "bolt.fill")

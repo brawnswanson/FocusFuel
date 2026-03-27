@@ -75,7 +75,7 @@ struct DifficultyPickerRow: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(difficulty.label)
                         .font(.subheadline.bold())
-                        .foregroundStyle(isSelected ? difficulty.accentColor : .primary)
+                        .foregroundStyle(isSelected ? .accentDefault : .primary)
                     Text(difficulty.description)
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -94,19 +94,19 @@ struct DifficultyPickerRow: View {
                 
                 // Selection indicator
                 Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                    .foregroundStyle(isSelected ? difficulty.accentColor : Color(.tertiaryLabel))
+                    .foregroundStyle(isSelected ? .accentDefault : Color(.tertiaryLabel))
                     .font(.body)
             }
             .padding(14)
             .background(
                 RoundedRectangle(cornerRadius: 12)
                     .fill(isSelected
-                          ? difficulty.accentColor.opacity(0.15)
-                          : difficulty.accentColor.opacity(0.05))
+                          ? .accentDefault.opacity(0.15)
+                          : .accentDefault.opacity(0.05))
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(difficulty.accentColor.opacity(0.3))
+                    .stroke(.accentDefault.opacity(0.3))
             )
         }
         .buttonStyle(.plain)

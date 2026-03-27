@@ -21,45 +21,7 @@ enum Difficulty: String, CaseIterable, Codable {
         }
     }
     
-    var accentColor: Color {
-        switch self {
-        case .boss: return Color.Tier.boss.default
-        case .medium: return Color.Tier.medium.default
-        case .quick: return Color.Tier.quick.default
-        }
-    }
     
-    var borderColor: Color {
-        switch self {
-        case .boss: return Color.Tier.boss.dark
-        case .medium: return Color.Tier.medium.dark
-        case .quick: return Color.Tier.quick.dark
-        }
-    }
-    
-    var backgroundColor: Color {
-        switch self {
-        case .boss: return Color.Tier.boss.default
-        case .medium: return Color.Tier.medium.default
-        case .quick: return Color.Tier.quick.default
-        }
-    }
-    
-    var textColor: Color {
-        switch self {
-        case .boss: return Color.Tier.boss.text
-        case .medium: return Color.Tier.medium.text
-        case .quick: return Color.Tier.quick.text
-        }
-    }
-    
-    var icon: Image {
-        switch self {
-        case .boss: return Image(systemName: "circle.fill")
-        case .medium: return Image(systemName: "circle.fill")
-        case .quick: return Image(systemName: "circle.fill")
-        }
-    }
     
     var description: String {
         switch self {

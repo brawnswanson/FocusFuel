@@ -32,6 +32,11 @@ extension Color {
         static let borderSubtle   = Color("borderSubtle")    // #D3D1C7 — default card/input border
         static let borderDefault  = Color("borderDefault")   // #B4B2A9 — emphasis border
         static let borderStrong   = Color("borderStrong")    // #888780 — focus rings, active borders
+        
+        // MARK: Fuel Colors
+        static let fuelBackground = Color(hex: 0xFAC775) // amber 100
+        static let fuelBorder     = Color(hex: 0xEF9F27) // amber 200
+        static let fuelText       = Color(hex: 0x633806) // amber 800
     }
 }
 

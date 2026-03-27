@@ -10,17 +10,17 @@ import SwiftUI
 struct FilterChipBar: View {
     
     @Binding var selectedFilter: Difficulty?
-   
+    
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack {
+            HStack(spacing: 8) {
                 Spacer()
-                FilterChip(filterOption: nil, selectedFilter: $selectedFilter)
-                ForEach(Difficulty.allCases, id: \.self) { filterOption in
+                ForEach(TaskFilterOption.allCases, id: \.self) { filterOption in
                     FilterChip(filterOption: filterOption, selectedFilter: $selectedFilter)
                 }
                 Spacer()
             }
+            .padding(.vertical, 8)
         }
     }
 }

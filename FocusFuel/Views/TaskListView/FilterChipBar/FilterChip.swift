@@ -9,30 +9,55 @@ import SwiftUI
 
 struct FilterChip: View {
     
-    var filterOption: Difficulty?
+    var filterOption: TaskFilterOption
     @Binding var selectedFilter: Difficulty?
     
     var isSelected: Bool {
-        return selectedFilter == filterOption
+        return selectedFilter == filterOption.difficulty
     }
     
     var body: some View {
-        Button(action: {selectedFilter = filterOption }) {
+        Button(action: {selectedFilter = filterOption.difficulty }) {
             HStack {
-                if let filterOption {
-                    filterOption.icon.foregroundStyle(filterOption.backgroundColor)
-                    Text(filterOption.label)
-                } else {
-                    Image(systemName: "bolt.fill").foregroundStyle(.yellow)
-                    Text("All")
-                }
+                filterOption.icon?
+                    .foregroundStyle(isSelected ? filterOption.tier!.subtle : filterOption.tier!.default)
+                    .font(.system(size: 15))
+                Text(filterOption.label)
+                    .font(.system(size: 15, weight: isSelected ? .medium : .regular))
+                    .foregroundStyle(labelColor)
             }
-            .padding(.horizontal, 6)
-            .padding(.vertical, 4)
-            .background(isSelected ? Color.green.opacity(0.75) : Color(.secondarySystemBackground), in: .capsule)
-            .foregroundStyle(isSelected ? .black : .secondary)
-            .animation(.easeInOut(duration: 0.3), value: isSelected)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 8)
+            .background(backgroundColor)
+            .clipShape(Capsule())
+            .overlay(
+                Capsule()
+                    .stroke(borderColor, lineWidth: isSelected ? 1 : 0.5)
+            )
+            .animation(.easeInOut(duration: 0.15), value: isSelected)
         }
         .buttonStyle(.plain)
+    }
+    
+    private var labelColor: Color {
+        guard let tier = filterOption.tier else {
+            return isSelected ? Color.Ember.textInverse : Color.Ember.textSecondary
+        }
+        return isSelected ? Color.Ember.textInverse : tier.text
+    }
+    
+    private var backgroundColor: Color {
+        guard let tier = filterOption.tier else {
+            // "All" chip
+            return isSelected ? Color.Ember.accentDefault : Color.Ember.surface
+        }
+        return isSelected ? tier.default : tier.subtle
+    }
+    
+    private var borderColor: Color {
+        guard let tier = filterOption.tier else {
+            return isSelected ? Color.Ember.accentDefault : Color.Ember.borderSubtle
+        }
+        return isSelected ? tier.default : tier.subtle
     }
 }

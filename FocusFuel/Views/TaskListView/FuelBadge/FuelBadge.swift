@@ -16,19 +16,19 @@ struct FuelBadge: View {
     var body: some View {
         VStack(spacing: 2) {
             HStack {
-                Image(systemName: "bolt.fill").foregroundStyle(.yellow)
+                Image(systemName: "bolt.fill")
                 Text("\(fuelBalance.first?.currentBalance ?? 99)")
-                    .font(.title2.bold())
-                    .foregroundStyle(.yellow)
             }
             Text("FUEL")
-                .font(.caption2.bold())
-                .foregroundStyle(.yellow.opacity(0.7))
-                .tracking(2)
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
-        .background(.yellow.opacity(0.12), in: RoundedRectangle(cornerRadius: 14))
-        .overlay(RoundedRectangle(cornerRadius: 14).stroke(.yellow.opacity(0.3), lineWidth: 1))
+        .foregroundStyle(Color.Ember.fuelText)
+        .padding(.horizontal, 20)
+        .padding(.vertical, 6)
+        .background(Color.Ember.fuelBackground)
+        .clipShape(Capsule())
+        .overlay(
+            Capsule()
+                .stroke(Color.Ember.fuelBorder, lineWidth: 0.5)
+        )
     }
 }

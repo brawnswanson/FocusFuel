@@ -15,7 +15,7 @@ struct TaskRowBody: View {
         VStack(alignment: .leading, spacing: 4) {
             Text(task.title)
                 .font(.body.weight(task.isCompleted ? .regular : .semibold))
-                .foregroundStyle(task.difficulty.textColor)
+                .foregroundStyle(.textPrimary)
                 .strikethrough(task.isCompleted, color: .secondary)
                 .lineLimit(2)
             

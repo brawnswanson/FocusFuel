@@ -67,8 +67,8 @@ struct FuelEarnedBanner: View {
                 Circle()
                     .fill(accentColor.opacity(0.15))
                     .frame(width: 44, height: 44)
-                Text(difficulty.icon)
-                    .font(.title3)
+               // Text(difficulty.icon)
+                 //   .font(.title3)
             }
 
             // Text content

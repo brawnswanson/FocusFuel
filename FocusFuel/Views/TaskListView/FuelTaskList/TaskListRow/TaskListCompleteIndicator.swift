@@ -14,17 +14,18 @@ struct TaskRowCompleteIndicator: View {
     var body: some View {
         ZStack {
             Circle()
-                .stroke(task.difficulty.accentColor.opacity(task.isCompleted ? 0.3 : 0.6), lineWidth: 2)
-                .frame(width: 26, height: 26)
+                .fill(task.isCompleted ? task.difficulty.tier.default : Color.clear)
+                .frame(width: 24, height: 24)
+            Circle()
+                .stroke(task.isCompleted ? task.difficulty.tier.default : task.difficulty.tier.default.opacity(0.5), lineWidth: 1.5)
+                .frame(width: 24, height: 24)
+            
             if task.isCompleted {
-                Circle()
-                    .fill(task.difficulty.accentColor.opacity(0.3))
-                    .frame(width: 26, height: 26)
                 Image(systemName: "checkmark")
-                    .font(.system(size: 11, weight: .bold))
-                    .foregroundStyle(task.difficulty.accentColor)
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(Color.Ember.textInverse)
             }
         }
-        .animation(.spring(duration: 0.3, bounce: 0.5), value: task.isCompleted)
+        .animation(.easeInOut(duration: 0.2), value: task.isCompleted)
     }
 }

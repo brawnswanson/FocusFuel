@@ -37,20 +37,19 @@ struct TaskListView: View {
         }
     }
     
+    var totalTasks: Int {
+        completedTasks.count + pendingTasks.count
+    }
+    
     var body: some View {
         NavigationStack {
             VStack {
                 HStack {
-                    VStack(alignment: .leading) {
-                        Text("Today's Progress:")
-                        ProgressView("9 of 10 tasks completed", value: 0.9)
-                            .tint(.green)
-                    }
+                    TaskListProgressView(completed: completedTasks.count, total: totalTasks)
                     Spacer()
                     FuelBadge()
                 }
                 FilterChipBar(selectedFilter: $selectedFilter)
-                    .padding(.vertical, 4.0)
                 FuelTaskList(pendingTasks: pendingTasks, completedTasks: completedTasks, fuelBalance: fuelBalance)
                 AddTaskButton(isPresented: $isAddTaskSheetPresented)
             }
@@ -67,11 +66,6 @@ struct TaskListView: View {
             return tasks.filter { $0.difficulty == filterBy }
         }
         else { return tasks }
-    }
-    
-    func toggleComplete(for task: FuelTask) {
-        task.isCompleted.toggle()
-        saveContext()
     }
     
     func addTask() {

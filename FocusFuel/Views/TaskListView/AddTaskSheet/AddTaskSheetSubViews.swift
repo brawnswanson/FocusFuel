@@ -7,42 +7,32 @@
 
 import SwiftUI
 
-struct ButtonToolBar: View {
-    
-    var saveAction: () -> Void
-    var isSaveable: Bool
-    @Binding var isPresented: Bool
-    
-    var body: some View {
-        HStack {
-            CancelButton(cancelAction: { isPresented = false })
-            SaveButton(saveAction: saveAction, isSaveable: isSaveable, isPresented: $isPresented)
-        }
-        .padding(.horizontal, 30)
-        .padding(.vertical, 8.0)
-    }
-}
-
 struct TaskNameInput: View {
     
     @Binding var taskName: String
     var titleFocused: FocusState<Bool>.Binding
     
     var body: some View {
-        VStack(alignment: .leading) {
-            Label("Task", systemImage: "bolt.fill")
-                .font(.caption.bold())
-                .foregroundStyle(.secondary)
-                .textCase(.uppercase)
-                .tracking(1)
-
-            TextField("What do you need to do?", text: $taskName, axis: .vertical)
-                .font(.body)
-                .focused(titleFocused)
-                .background(Color(.secondarySystemGroupedBackground),
-                            in: RoundedRectangle(cornerRadius: 12))
-                .lineLimit(3)
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Task name")
+                .font(.system(size: 12, weight: .medium))
+                .foregroundStyle(Color.Ember.textTertiary)
+            TextField("What do you need to do?", text: $taskName)
+                .font(.system(size: 16))
+                .foregroundStyle(Color.Ember.textPrimary)
+                .padding(12)
+                .background(Color.Ember.surfaceSubtle)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(
+                            taskName.isEmpty ? Color.Ember.borderSubtle : Color.Ember.accentDefault,
+                            lineWidth: taskName.isEmpty ? 0.5 : 1
+                        )
+                )
+                .animation(.easeInOut(duration: 0.15), value: taskName.isEmpty)
         }
+        .focused(titleFocused)
     }
 }
 
@@ -70,12 +60,14 @@ struct DifficultyPickerRow: View {
     
     var body: some View {
         Button(action: { selectedDifficulty = difficulty }) {
-            HStack(spacing: 14) {
-                // Label + description
+            HStack(alignment: .center, spacing: 12) {
+                Circle()
+                    .fill(difficulty.tier.default)
+                    .frame(width: 10, height: 10)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(difficulty.label)
-                        .font(.subheadline.bold())
-                        .foregroundStyle(isSelected ? .accentDefault : .primary)
+                        .font(.system(size: 15, weight: .medium))
+                        .foregroundStyle(isSelected ? difficulty.tier.text : Color.Ember.textPrimary)
                     Text(difficulty.description)
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -84,70 +76,38 @@ struct DifficultyPickerRow: View {
                 Spacer()
                 
                 // Fuel reward
-                HStack {
-                    Text("+\(difficulty.fuelReward)")
-                        .font(.caption.bold())
-                        .foregroundStyle(isSelected ? .yellow : .secondary)
-                    Image(systemName: "bolt.fill")
-                        .foregroundStyle(.yellow)
+                FuelBadge(amount: difficulty.fuelReward, size: .small)
+                ZStack {
+                    Circle()
+                        .fill(isSelected ? difficulty.tier.default : Color.clear)
+                        .frame(width: 22, height: 22)
+                    Circle()
+                        .stroke(
+                            isSelected ? difficulty.tier.default : Color.Ember.borderDefault,
+                            lineWidth: 1.5
+                        )
+                        .frame(width: 22, height: 22)
+                    if isSelected {
+                        Image(systemName: "checkmark")
+                            .font(.system(size: 10, weight: .semibold))
+                            .foregroundStyle(Color.Ember.textInverse)
+                    }
                 }
-                
-                // Selection indicator
-                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                    .foregroundStyle(isSelected ? .accentDefault : Color(.tertiaryLabel))
-                    .font(.body)
+                .animation(.easeInOut(duration: 0.15), value: isSelected)
             }
-            .padding(14)
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(isSelected
-                          ? .accentDefault.opacity(0.15)
-                          : .accentDefault.opacity(0.05))
-            )
+            .padding(12)
+            .background(isSelected ? difficulty.tier.subtle : Color.Ember.surface)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(.accentDefault.opacity(0.3))
+                    .stroke(
+                        isSelected ? difficulty.tier.default : Color.Ember.borderSubtle,
+                        lineWidth: isSelected ? 1 : 0.5
+                    )
             )
+            .animation(.easeInOut(duration: 0.15), value: isSelected)
         }
         .buttonStyle(.plain)
-    }
-}
-
-
-struct CancelButton: View {
-    
-    var cancelAction: () -> Void
-    
-    var body: some View {
-        Button("Cancel") {
-            cancelAction()
-        }
-        .padding(.vertical, 10)
-        .padding(.horizontal, 14)
-        .foregroundStyle(.white)
-        .background(.red, in: Capsule())
-        //.shadow(color: .red.opacity(0.4), radius: 12, y: 4)
-        Spacer()
-    }
-}
-
-struct SaveButton: View {
-    
-    var saveAction: () -> Void
-    var isSaveable: Bool
-    @Binding var isPresented: Bool
-    
-    var body: some View {
-        Button("Save") {
-           saveAction()
-           isPresented = false
-        }
-        .padding(.vertical, 10)
-        .padding(.horizontal, 14)
-        .foregroundStyle(.white)
-        .background(isSaveable ? .green : .green.opacity(0.5), in: Capsule())
-        //.shadow(color: .green.opacity(0.4), radius: 12, y: 4)
-        .disabled(!isSaveable)
     }
 }
 

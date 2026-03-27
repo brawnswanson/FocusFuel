@@ -23,7 +23,7 @@ struct ContentView: View {
                 }
                 
                 Tab("", systemImage: "lock.badge.clock") {
-                    AppStatusView()
+                    AppPickerView()
                 }
                 Tab("", systemImage: "basket") {
                     StoreView()

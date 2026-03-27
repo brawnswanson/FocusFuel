@@ -11,12 +11,15 @@ import SwiftData
 @main
 struct FocusFuelApp: App {
 
-    // MARK: - Body
+    @StateObject private var familyControlsManager = FamilyControlsManager.shared
 
     var body: some Scene {
         WindowGroup {
             ContentView()
-              //  .environment(authorizationModel)
+                .environmentObject(familyControlsManager)
+                .task {
+                    familyControlsManager.checkFirstLaunch()
+                }
         }
         .modelContainer(for: [FuelBalance.self, FuelTask.self])
     }

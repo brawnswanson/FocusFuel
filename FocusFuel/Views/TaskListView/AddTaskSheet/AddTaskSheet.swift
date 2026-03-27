@@ -28,19 +28,51 @@ struct AddTaskSheet: View {
     }
     
     var body: some View {
-        VStack(spacing: 12.0) {
-            ButtonToolBar(saveAction: saveAction, isSaveable: isSaveable, isPresented: $isPresented)
-            TaskNameInput(taskName: $taskName, titleFocused: $titleFocused)
-            DifficultyPicker(selectedDifficulty: $selectedDifficulty)
-            NotesField(notes: $notes)
-            Spacer()
-        }
-        .padding(.horizontal, 8.0)
-        .onAppear {
-            titleFocused = true
-            taskName = ""
-            notes = ""
-            selectedDifficulty = .medium
+        NavigationStack {
+            VStack(spacing: 12.0) {
+                TaskNameInput(taskName: $taskName, titleFocused: $titleFocused)
+                    .padding(16)
+                Divider()
+                    .background(Color.Ember.borderSubtle)
+                Text("Difficulty")
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(Color.Ember.textTertiary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 16)
+                    .padding(.bottom, 8)
+                DifficultyPicker(selectedDifficulty: $selectedDifficulty)
+                    .padding(.horizontal, 16)
+                NotesField(notes: $notes)
+                Spacer()
+            }
+            .background(Color.Ember.appBackground)
+            .navigationTitle("New Task")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        isPresented = false
+                    }
+                    .foregroundStyle(Color.Ember.textSecondary)
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") {
+                        saveAction()
+                        isPresented = false
+                    }
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundStyle(isSaveable ? Color.Ember.accentDefault : Color.Ember.textTertiary)
+                    .disabled(!isSaveable)
+                    .animation(.easeInOut(duration: 0.15), value: isSaveable)
+                }
+            }
+            .onAppear {
+                titleFocused = true
+                taskName = ""
+                notes = ""
+                selectedDifficulty = .medium
+            }
         }
     }
 }

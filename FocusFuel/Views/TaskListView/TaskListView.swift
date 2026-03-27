@@ -47,7 +47,7 @@ struct TaskListView: View {
                 HStack {
                     TaskListProgressView(completed: completedTasks.count, total: totalTasks)
                     Spacer()
-                    FuelBadge()
+                    FuelBadge(amount: fuelBalance.currentBalance)
                 }
                 FilterChipBar(selectedFilter: $selectedFilter)
                 FuelTaskList(pendingTasks: pendingTasks, completedTasks: completedTasks, fuelBalance: fuelBalance)

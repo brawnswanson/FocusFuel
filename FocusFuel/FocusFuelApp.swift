@@ -10,9 +10,10 @@ import SwiftData
 
 @main
 struct FocusFuelApp: App {
-
+    
+    @Environment(\.scenePhase) private var scenePhase
     @StateObject private var familyControlsManager = FamilyControlsManager.shared
-
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -22,5 +23,10 @@ struct FocusFuelApp: App {
                 }
         }
         .modelContainer(for: [FuelBalance.self, FuelTask.self])
+        .onChange(of: scenePhase) {
+            if scenePhase == .active {
+                familyControlsManager.updateStatus()
+            }
+        }
     }
 }

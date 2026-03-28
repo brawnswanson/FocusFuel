@@ -7,6 +7,7 @@
 
 import Foundation
 import FamilyControls
+import ManagedSettings
 import Combine
 
 @MainActor
@@ -16,13 +17,19 @@ class FamilyControlsManager: ObservableObject {
     
     @Published var authorizationStatus: AuthorizationStatus = .notDetermined
     @Published var activitySelection: FamilyActivitySelection = FamilyActivitySelection()
+    @Published var isLocked: Bool = false
     
-    private let hasLaunchedKey = "hasLaunchedBefore"
-    private let selectionKey = "savedActivitySelection"
+    private let store: ManagedSettingsStore = ManagedSettingsStore()
+    private let hasLaunchedKey: String = "hasLaunchedBefore"
+    private let selectionKey: String = "savedActivitySelection"
+    private let isLockedKey: String = "isLocked"
+    private let sharedDefaults: UserDefaults = UserDefaults(suiteName: "pressner.apps.FocusFuel") ?? UserDefaults.standard
+
     
     private init() {
         updateStatus()
         loadSelection()
+        isLocked = UserDefaults.standard.bool(forKey: isLockedKey)
     }
     
     func updateStatus() {
@@ -49,25 +56,37 @@ class FamilyControlsManager: ObservableObject {
         }
     }
     
+    func lockApps() {
+        store.shield.applications = activitySelection.applicationTokens
+        isLocked = true
+        UserDefaults.standard.set(true, forKey: isLockedKey)
+    }
+    
+    func unlockApps() {
+        store.shield.applications = nil
+        isLocked = false
+        UserDefaults.standard.set(false, forKey: isLockedKey)
+    }
+    
+    var hasSelectedApps: Bool {
+        !activitySelection.applicationTokens.isEmpty
+    }
+    
     func saveSelection() {
         do {
-            let encoded = try JSONEncoder().encode(activitySelection)
-            UserDefaults.standard.set(encoded, forKey: selectionKey)
+            let encoded: Data = try JSONEncoder().encode(activitySelection)
+            sharedDefaults.set(encoded, forKey: selectionKey)
         } catch {
             print("Failed to save activity selection: \(error)")
         }
     }
-    
+
     func loadSelection() {
-        guard let data = UserDefaults.standard.data(forKey: selectionKey) else { return }
+        guard let data: Data = sharedDefaults.data(forKey: selectionKey) else { return }
         do {
             activitySelection = try JSONDecoder().decode(FamilyActivitySelection.self, from: data)
         } catch {
             print("Failed to load activity selection: \(error)")
         }
-    }
-    
-    var hasSelectedApps: Bool {
-        !activitySelection.applicationTokens.isEmpty
     }
 }

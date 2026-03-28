@@ -6,15 +6,67 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		C4B8772A2F77C32E0069C687 /* DeviceActivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C400D57F2F640D0E00D6431D /* DeviceActivity.framework */; };
+		C4B877322F77C32E0069C687 /* FocusFuelDeviceActivity.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C4B877292F77C32D0069C687 /* FocusFuelDeviceActivity.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C4B877392F77C38C0069C687 /* FamilyControls.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4B877382F77C38C0069C687 /* FamilyControls.framework */; };
+		C4B8773B2F77C39B0069C687 /* ManagedSettings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4B8773A2F77C39B0069C687 /* ManagedSettings.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C4B877302F77C32E0069C687 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C400D5622F640C1F00D6431D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C4B877282F77C32D0069C687;
+			remoteInfo = FocusFuelDeviceActivity;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C4B877372F77C32E0069C687 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				C4B877322F77C32E0069C687 /* FocusFuelDeviceActivity.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		C400D56A2F640C1F00D6431D /* FocusFuel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FocusFuel.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C400D57F2F640D0E00D6431D /* DeviceActivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DeviceActivity.framework; path = System/Library/Frameworks/DeviceActivity.framework; sourceTree = SDKROOT; };
+		C4B877292F77C32D0069C687 /* FocusFuelDeviceActivity.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FocusFuelDeviceActivity.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		C4B877382F77C38C0069C687 /* FamilyControls.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FamilyControls.framework; path = System/Library/Frameworks/FamilyControls.framework; sourceTree = SDKROOT; };
+		C4B8773A2F77C39B0069C687 /* ManagedSettings.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ManagedSettings.framework; path = System/Library/Frameworks/ManagedSettings.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		C4B877332F77C32E0069C687 /* Exceptions for "FocusFuelDeviceActivity" folder in "FocusFuelDeviceActivity" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = C4B877282F77C32D0069C687 /* FocusFuelDeviceActivity */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		C400D56C2F640C1F00D6431D /* FocusFuel */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = FocusFuel;
+			sourceTree = "<group>";
+		};
+		C4B8772B2F77C32E0069C687 /* FocusFuelDeviceActivity */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C4B877332F77C32E0069C687 /* Exceptions for "FocusFuelDeviceActivity" folder in "FocusFuelDeviceActivity" target */,
+			);
+			path = FocusFuelDeviceActivity;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -27,6 +79,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C4B877262F77C32D0069C687 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C4B877392F77C38C0069C687 /* FamilyControls.framework in Frameworks */,
+				C4B8773B2F77C39B0069C687 /* ManagedSettings.framework in Frameworks */,
+				C4B8772A2F77C32E0069C687 /* DeviceActivity.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -34,6 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				C400D56C2F640C1F00D6431D /* FocusFuel */,
+				C4B8772B2F77C32E0069C687 /* FocusFuelDeviceActivity */,
 				C400D57E2F640D0E00D6431D /* Frameworks */,
 				C400D56B2F640C1F00D6431D /* Products */,
 			);
@@ -43,6 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				C400D56A2F640C1F00D6431D /* FocusFuel.app */,
+				C4B877292F77C32D0069C687 /* FocusFuelDeviceActivity.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -50,6 +114,8 @@
 		C400D57E2F640D0E00D6431D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C4B8773A2F77C39B0069C687 /* ManagedSettings.framework */,
+				C4B877382F77C38C0069C687 /* FamilyControls.framework */,
 				C400D57F2F640D0E00D6431D /* DeviceActivity.framework */,
 			);
 			name = Frameworks;
@@ -65,10 +131,12 @@
 				C400D5662F640C1F00D6431D /* Sources */,
 				C400D5672F640C1F00D6431D /* Frameworks */,
 				C400D5682F640C1F00D6431D /* Resources */,
+				C4B877372F77C32E0069C687 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				C4B877312F77C32E0069C687 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				C400D56C2F640C1F00D6431D /* FocusFuel */,
@@ -79,6 +147,28 @@
 			productName = FocusFuel;
 			productReference = C400D56A2F640C1F00D6431D /* FocusFuel.app */;
 			productType = "com.apple.product-type.application";
+		};
+		C4B877282F77C32D0069C687 /* FocusFuelDeviceActivity */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C4B877342F77C32E0069C687 /* Build configuration list for PBXNativeTarget "FocusFuelDeviceActivity" */;
+			buildPhases = (
+				C4B877252F77C32D0069C687 /* Sources */,
+				C4B877262F77C32D0069C687 /* Frameworks */,
+				C4B877272F77C32D0069C687 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				C4B8772B2F77C32E0069C687 /* FocusFuelDeviceActivity */,
+			);
+			name = FocusFuelDeviceActivity;
+			packageProductDependencies = (
+			);
+			productName = FocusFuelDeviceActivity;
+			productReference = C4B877292F77C32D0069C687 /* FocusFuelDeviceActivity.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -91,6 +181,9 @@
 				LastUpgradeCheck = 2630;
 				TargetAttributes = {
 					C400D5692F640C1F00D6431D = {
+						CreatedOnToolsVersion = 26.3;
+					};
+					C4B877282F77C32D0069C687 = {
 						CreatedOnToolsVersion = 26.3;
 					};
 				};
@@ -110,12 +203,20 @@
 			projectRoot = "";
 			targets = (
 				C400D5692F640C1F00D6431D /* FocusFuel */,
+				C4B877282F77C32D0069C687 /* FocusFuelDeviceActivity */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		C400D5682F640C1F00D6431D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C4B877272F77C32D0069C687 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -132,7 +233,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C4B877252F77C32D0069C687 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C4B877312F77C32E0069C687 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C4B877282F77C32D0069C687 /* FocusFuelDeviceActivity */;
+			targetProxy = C4B877302F77C32E0069C687 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		C400D5732F640C2000D6431D /* Debug */ = {
@@ -326,6 +442,66 @@
 			};
 			name = Release;
 		};
+		C4B877352F77C32E0069C687 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = FocusFuelDeviceActivity/FocusFuelDeviceActivity.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = BM85JN4AU8;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FocusFuelDeviceActivity/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = FocusFuelDeviceActivity;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = pressner.apps.FocusFuel.FocusFuelDeviceActivity;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C4B877362F77C32E0069C687 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = FocusFuelDeviceActivity/FocusFuelDeviceActivity.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = BM85JN4AU8;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FocusFuelDeviceActivity/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = FocusFuelDeviceActivity;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = pressner.apps.FocusFuel.FocusFuelDeviceActivity;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -343,6 +519,15 @@
 			buildConfigurations = (
 				C400D5762F640C2000D6431D /* Debug */,
 				C400D5772F640C2000D6431D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C4B877342F77C32E0069C687 /* Build configuration list for PBXNativeTarget "FocusFuelDeviceActivity" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C4B877352F77C32E0069C687 /* Debug */,
+				C4B877362F77C32E0069C687 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

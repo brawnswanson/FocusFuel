@@ -43,14 +43,3 @@ final class LockedApp {
         (minutes / 15) * fuelCostPer15Min
     }
 }
-
-// MARK: - SessionDuration
-
-enum SessionDuration: Int, CaseIterable {
-    case fifteen = 15
-    case thirty  = 30
-    case sixty   = 60
-
-    var label: String { "\(rawValue) min" }
-    var fuelMultiplier: Int { rawValue / 15 }
-}

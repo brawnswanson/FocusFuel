@@ -51,16 +51,21 @@ class UnlockSessionManager: ObservableObject {
     
     func activate(session: UnlockSession, familyControlsManager: FamilyControlsManager) {
         guard activeSession == nil else {
-            enqueue(session: session)
-            return
+                enqueue(session: session)
+                return
+            }
+            removeFromInventory(sessionId: session.id)
+            let active: ActiveSession = ActiveSession(from: session)
+            activeSession = active
+            saveActiveSession()
+            
+            // Immediately remove the shield
+            store.shield.applications = nil
+            print("Shield removed immediately on activation")
+            
+            scheduleActivity(startDate: active.startDate, endDate: active.endDate)
+            scheduleExpirationCheck(familyControlsManager: familyControlsManager, endDate: active.endDate)
         }
-        removeFromInventory(sessionId: session.id)
-        let active: ActiveSession = ActiveSession(from: session)
-        activeSession = active
-        saveActiveSession()
-        scheduleActivity(startDate: active.startDate, endDate: active.endDate)
-        scheduleExpirationCheck(familyControlsManager: familyControlsManager, endDate: active.endDate)
-    }
     
     // MARK: - Scheduling
     
@@ -72,10 +77,11 @@ class UnlockSessionManager: ObservableObject {
             repeats: false
         )
         do {
-            try activityCenter.startMonitoring(activityName, during: schedule)
-        } catch {
-            print("Failed to schedule device activity: \(error)")
-        }
+                try activityCenter.startMonitoring(activityName, during: schedule)
+                print("Activity scheduled from \(startDate) to \(endDate)")
+            } catch {
+                print("Failed to schedule device activity: \(error)")
+            }
     }
     
     private func stopScheduledActivity() {

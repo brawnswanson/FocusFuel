@@ -13,11 +13,16 @@ struct FocusFuelApp: App {
     
     @Environment(\.scenePhase) private var scenePhase
     @StateObject private var familyControlsManager = FamilyControlsManager.shared
+    @StateObject private var fuelManager: FuelManager = FuelManager.shared
+    @StateObject private var unlockSessionManager: UnlockSessionManager = UnlockSessionManager.shared
+    
     
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(familyControlsManager)
+                .environmentObject(fuelManager)
+                .environmentObject(unlockSessionManager)
                 .task {
                     familyControlsManager.checkFirstLaunch()
                 }
@@ -26,6 +31,10 @@ struct FocusFuelApp: App {
         .onChange(of: scenePhase) {
             if scenePhase == .active {
                 familyControlsManager.updateStatus()
+                if !unlockSessionManager.hasActiveSession {
+                    familyControlsManager.applyShield()
+                }
+                unlockSessionManager.handleExpiration(familyControlsManager: familyControlsManager)
             }
         }
     }

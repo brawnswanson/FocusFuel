@@ -56,16 +56,8 @@ class FamilyControlsManager: ObservableObject {
         }
     }
     
-    func lockApps() {
+    func applyShield() {
         store.shield.applications = activitySelection.applicationTokens
-        isLocked = true
-        UserDefaults.standard.set(true, forKey: isLockedKey)
-    }
-    
-    func unlockApps() {
-        store.shield.applications = nil
-        isLocked = false
-        UserDefaults.standard.set(false, forKey: isLockedKey)
     }
     
     var hasSelectedApps: Bool {

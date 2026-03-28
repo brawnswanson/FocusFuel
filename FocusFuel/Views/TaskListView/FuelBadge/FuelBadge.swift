@@ -10,49 +10,58 @@ import SwiftData
 
 struct FuelBadge: View {
     
-    var amount: Int
+    @EnvironmentObject var fuelManager: FuelManager
     var size: BadgeSize = .regular
+    var staticValue: Int? = nil
     
     var body: some View {
         VStack(spacing: 2) {
             HStack {
-                Image(systemName: "bolt.fill")
+                Image(systemName: "bolt.circle.fill")
                     .font(size.iconFont)
-                Text("\(amount)")
-                    .font(size.font)
+                    .foregroundStyle(Color.Ember.accentDefault)
+                if let value = staticValue {
+                    Text("\(value)")
+                        .font(size.font)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(Color.Ember.accentText)
+                } else {
+                    Text("\(fuelManager.balance)")
+                        .font(size.font)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(Color.Ember.accentText)
+                }
+                
             }
-            Text("FUEL")
-                .font(size.font)
         }
-        .foregroundStyle(Color.Ember.fuelText)
         .padding(.horizontal, size.horizontalPadding)
-                .padding(.vertical, size.verticalPadding)
-                .background(Color.Ember.fuelBackground)
-        .clipShape(Capsule())
+        .padding(.vertical, size.verticalPadding)
+        .background(Color.Ember.accentSubtle)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
         .overlay(
-            Capsule()
-                .stroke(Color.Ember.fuelBorder, lineWidth: 0.5)
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(Color.Ember.borderSubtle, lineWidth: 1.0)
         )
     }
     
     enum BadgeSize {
-            case regular, small
-
-            var font: Font {
-                switch self {
-                case .regular: return .system(size: 13, weight: .medium)
-                case .small:   return .system(size: 11, weight: .medium)
-                }
+        case regular, small
+        
+        var font: Font {
+            switch self {
+            case .regular: return .system(size: 13, weight: .medium)
+            case .small:   return .system(size: 11, weight: .medium)
             }
-
-            var iconFont: Font {
-                switch self {
-                case .regular: return .system(size: 11, weight: .medium)
-                case .small:   return .system(size: 9, weight: .medium)
-                }
-            }
-
-            var horizontalPadding: CGFloat { self == .regular ? 10 : 10 }
-            var verticalPadding: CGFloat   { self == .regular ? 4  : 4 }
         }
+        
+        var iconFont: Font {
+            switch self {
+            case .regular: return .system(size: 11, weight: .medium)
+            case .small:   return .system(size: 9, weight: .medium)
+            }
+        }
+        
+        var horizontalPadding: CGFloat { self == .regular ? 10 : 10 }
+        var verticalPadding: CGFloat   { self == .regular ? 4  : 4 }
+    }
 }

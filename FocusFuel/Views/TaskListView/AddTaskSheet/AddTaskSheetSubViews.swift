@@ -76,7 +76,7 @@ struct DifficultyPickerRow: View {
                 Spacer()
                 
                 // Fuel reward
-                FuelBadge(amount: difficulty.fuelReward, size: .small)
+                FuelBadge(size: .regular, staticValue: difficulty.fuelReward)
                 ZStack {
                     Circle()
                         .fill(isSelected ? difficulty.tier.default : Color.clear)

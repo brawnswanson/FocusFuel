@@ -11,8 +11,8 @@ import SwiftData
 struct TaskListRow: View {
 
     @Environment(\.modelContext) var context
+    @EnvironmentObject var fuelManager: FuelManager
     var task: FuelTask
-    var fuelBalance: FuelBalance
     
     var body: some View {
         Button(action: {
@@ -33,9 +33,9 @@ struct TaskListRow: View {
     
     func changeTaskStatus() {
         if task.isCompleted {
-            fuelBalance.currentBalance -= task.difficulty.fuelReward
+            fuelManager.deductFuelForTaskToggle(amount: task.difficulty.fuelReward)
         } else {
-            fuelBalance.currentBalance += task.difficulty.fuelReward
+            fuelManager.addFuel(amount: task.difficulty.fuelReward)
         }
         task.isCompleted.toggle()
     }

@@ -33,16 +33,20 @@ struct AppPickerView: View {
                             .font(.subheadline)
                             .fontWeight(.medium)
                             .foregroundStyle(Color.Ember.accentDefault)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(Color.Ember.accentSubtle)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
                     } else {
                         Text("No apps selected yet")
                             .font(.subheadline)
-                            .foregroundStyle(Color.Ember.textSecondary)
+                            .foregroundStyle(Color.Ember.textTertiary)
                     }
                     Button(action: { isPickerPresented = true}) {
                         Text(familyControlsManager.hasSelectedApps ? "Change Selected Apps" : "Select Apps")
                             .font(.subheadline)
                             .fontWeight(.semibold)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.Ember.textInverse)
                             .padding(.horizontal, 24)
                             .padding(.vertical, 14)
                             .background(Color.Ember.accentDefault)
@@ -55,7 +59,9 @@ struct AppPickerView: View {
                     isPresented: $isPickerPresented,
                     selection: $familyControlsManager.activitySelection
                 )
-                .onChange(of: familyControlsManager.activitySelection) { familyControlsManager.saveSelection() }
+                .onChange(of: familyControlsManager.activitySelection) {
+                    familyControlsManager.saveSelection()
+                    familyControlsManager.applyShield()}
             } else {
                 FamilyControlsLockedView()
             }

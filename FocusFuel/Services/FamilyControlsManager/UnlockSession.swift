@@ -34,7 +34,7 @@ enum SessionDuration: Int, Codable, CaseIterable, Identifiable {
     }
     
     var timeInterval: TimeInterval {
-        Double(fuelCost) * 60.0
+        Double(self.rawValue) * 60.0
     }
 }
 

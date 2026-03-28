@@ -32,7 +32,7 @@ struct FamilyControlsLockedView: View {
                     Text("Enable Screen Time Access")
                         .font(.subheadline)
                         .fontWeight(.semibold)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.Ember.textInverse)
                         .padding(.horizontal, 24)
                         .padding(.vertical, 14)
                         .background(Color.Ember.accentDefault)
@@ -41,7 +41,7 @@ struct FamilyControlsLockedView: View {
                 if familyControlsManager.authorizationStatus == .denied {
                     Text("If the dialog doesn't appear, go to Settings → Screen Time → FocusFuel to enable access.")
                         .font(.caption)
-                        .foregroundStyle(Color("TextSecondary"))
+                        .foregroundStyle(Color.Ember.textTertiary)
                         .multilineTextAlignment(.center)
                 }
             }

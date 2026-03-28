@@ -1,51 +1,30 @@
-//
-//  ContentView.swift
-//  FocusFuel
-//
-//  Created by Daniel Pressner on 13.03.2026.
-//
-
 import SwiftUI
 import SwiftData
 
 struct ContentView: View {
     
-    @Environment(\.modelContext) private var context
-    @Query var fuelBalance: [FuelBalance]
-    
-    //  @Environment(AppControlsAuthorizationModel.self) private var authorizationModel
+    @EnvironmentObject var fuelManager: FuelManager
+    @Environment(\.modelContext) private var context: ModelContext
     
     var body: some View {
-        Group {
-            TabView {
-                Tab("", systemImage: "checklist") {
-                    TaskListView()
-                }
-                
-                Tab("", systemImage: "lock.badge.clock") {
-                    AppPickerView()
-                }
-                Tab("", systemImage: "basket") {
-                    StoreView()
-                }
+        TabView {
+            Tab("Tasks", systemImage: "checkmark.square") {
+                TaskListView()
             }
-            .onAppear {
-                if fuelBalance.isEmpty {
-                    let newFuelBalance = FuelBalance()
-                    context.insert(newFuelBalance)
-                    try? context.save()
-                }
+            Tab("Store", systemImage: "basket") {
+                StoreView()
             }
-            
-            /*  .task {
-             if authorizationModel.authorizationStatus != .approved {
-             await authorizationModel.requestAuthorization()
-             }
-             } */
-            
+            Tab("App Lock", systemImage: "lock.shield") {
+                AppLockView()
+            }
         }
+        .onAppear {
+            fuelManager.configure(modelContext: context)
+        }
+        .tint(Color.Ember.accentDefault)
     }
 }
+
 // MARK: - Preview
 
 #Preview {

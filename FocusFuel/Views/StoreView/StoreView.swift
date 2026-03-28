@@ -6,46 +6,142 @@
 //
 
 import SwiftUI
+import FamilyControls
 
 struct StoreView: View {
     
-    @State var inventorySheetIsPresented = false
+    @EnvironmentObject var fuelManager: FuelManager
+    @EnvironmentObject var unlockSessionManager: UnlockSessionManager
+    @EnvironmentObject var familyControlsManager: FamilyControlsManager
+    
+    @State private var inventorySheetIsPresented: Bool = false
+    @State private var purchaseErrorMessage: String = ""
+    @State private var isPurchaseErrorPresented: Bool = false
     
     var body: some View {
-        VStack {
+        Group {
+            if familyControlsManager.authorizationStatus == .approved {
+                storeContent
+            } else {
+                FamilyControlsLockedView()
+            }
+        }
+    }
+    
+    // MARK: - Store Content
+    
+    private var storeContent: some View {
+        VStack(spacing: 0) {
+            
+            // MARK: - Top Bar
             HStack {
-                HStack {
-                    Text("35")
-                    Image(systemName: "bolt.circle")
-                }
-                .padding(.horizontal, 6.0)
-                .padding(.vertical, 4.0)
+                FuelBadge(size: .small)
                 Spacer()
-                Button(action: { inventorySheetIsPresented.toggle()}) {
+                Button(action: {
+                    inventorySheetIsPresented.toggle()
+                }) {
                     Image(systemName: "backpack")
                         .padding(.horizontal, 6.0)
                         .padding(.vertical, 4.0)
                 }
                 .buttonStyle(.bordered)
+                .tint(Color.Ember.accentDefault)
             }
             .padding(.horizontal, 16)
-            VStack {
-                Text("30 minute, single app unlock")
-                Text("15 minute, sincle app unlock")
-                Text("60 minute, single app unlock")
-                Text("30 minute, all apps unlock")
-                Text("15 minute, all apps unlock")
-                Text("60 minute, all apps unlock")
-                Text("60 minute external unlock timer")
-                Text("120 minute external unlock timer")
+            .padding(.vertical, 12)
+            
+            Divider()
+                .overlay(Color.Ember.borderSubtle)
+            
+            // MARK: - Session Cards
+            ScrollView {
+                VStack(spacing: 12) {
+                    ForEach(SessionDuration.allCases) { duration in
+                        SessionPurchaseCard(duration: duration) {
+                            handlePurchase(duration: duration)
+                        }
+                    }
+                }
+                .padding(16)
             }
         }
+        .background(Color.Ember.appBackground)
         .sheet(isPresented: $inventorySheetIsPresented) {
-            Text("Inventory Items")
+            BackPackView()
+        }
+        .alert("Not Enough Fuel", isPresented: $isPurchaseErrorPresented) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(purchaseErrorMessage)
+        }
+    }
+    
+    // MARK: - Purchase Handler
+    
+    private func handlePurchase(duration: SessionDuration) {
+        let result: (success: Bool, message: String) = unlockSessionManager.purchase(
+            duration: duration,
+            fuelBalance: fuelManager.balance
+        )
+        if result.success {
+            let didDeduct: Bool = fuelManager.deductFuel(amount: duration.fuelCost)
+            if !didDeduct {
+                purchaseErrorMessage = "Not enough Fuel for a \(duration.displayName) session."
+                isPurchaseErrorPresented = true
+            }
+        } else {
+            purchaseErrorMessage = result.message
+            isPurchaseErrorPresented = true
         }
     }
 }
 
-#Preview {
-    StoreView()
+// MARK: - Session Purchase Card
+
+struct SessionPurchaseCard: View {
+    
+    @EnvironmentObject var fuelManager: FuelManager
+    
+    let duration: SessionDuration
+    let onPurchase: () -> Void
+    
+    var canAfford: Bool {
+        return fuelManager.balance >= duration.fuelCost
+    }
+    
+    var body: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(duration.displayName)
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(Color.Ember.textPrimary)
+                Text("Unlock all selected apps")
+                    .font(.caption)
+                    .foregroundStyle(Color.Ember.textSecondary)
+            }
+            Spacer()
+            Button(action: onPurchase) {
+                HStack(spacing: 4) {
+                    Image(systemName: "bolt.circle")
+                    Text("\(duration.fuelCost)")
+                }
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .foregroundStyle(canAfford ? Color.Ember.textInverse : Color.Ember.textTertiary)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
+                .background(canAfford ? Color.Ember.accentDefault : Color.Ember.surfaceSubtle)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+            }
+            .disabled(!canAfford)
+        }
+        .padding(16)
+        .background(Color.Ember.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(Color.Ember.borderSubtle, lineWidth: 1)
+        )
+    }
 }

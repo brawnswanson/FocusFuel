@@ -7,12 +7,19 @@
 
 import SwiftUI
 
-struct TextBoxStyling: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+struct TextBoxStyle: ViewModifier {
+    
+    func body(content: Content) -> some View {
+        content
+            .font(.system(size: 12, weight: .medium))
+            .foregroundStyle(Color.Ember.textTertiary)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 16)
+            .padding(.top, 16)
+            .padding(.bottom, 8)
     }
-}
-
-#Preview {
-    TextBoxStyling()
+    
+    enum TextBoxSize {
+        case small, medium, large
+    }
 }

@@ -35,17 +35,34 @@ struct StoreView: View {
             
             // MARK: - Top Bar
             HStack {
-                FuelBadge(size: .small)
+                FuelBadge(fuelBalance: fuelManager.balance, size: .regular)
                 Spacer()
                 Button(action: {
                     inventorySheetIsPresented.toggle()
-                }) {
+                }) {HStack {
                     Image(systemName: "backpack")
-                        .padding(.horizontal, 6.0)
-                        .padding(.vertical, 4.0)
+                        .font(.subheadline)
+                    if UnlockSessionManager.shared.inventory.count > 0 {
+                        Text("\(UnlockSessionManager.shared.inventory.count)")
+                            .font(.caption)
+                            .fontWeight(.bold)
+                            .foregroundStyle(Color.Ember.textInverse)
+                            .frame(minWidth: 16, minHeight: 16)
+                            .background(Color.Ember.accentDefault)
+                            .clipShape(Circle())
+                    }
                 }
-                .buttonStyle(.bordered)
-                .tint(Color.Ember.accentDefault)
+                    
+                }
+                .foregroundStyle(Color.Ember.accentDefault)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .background(Color.Ember.accentSubtle)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color.Ember.borderSubtle, lineWidth: 1)
+                )
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)

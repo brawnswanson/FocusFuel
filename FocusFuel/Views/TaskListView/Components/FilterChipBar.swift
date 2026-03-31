@@ -1,5 +1,5 @@
 //
-//  FilterChip.swift
+//  FilterChipBar.swift
 //  FocusFuelPlay
 //
 //  Created by Daniel Pressner on 18.03.2026.
@@ -7,17 +7,33 @@
 
 import SwiftUI
 
+struct FilterChipBar: View {
+    
+    var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                Spacer()
+                ForEach(TaskFilterOption.allCases, id: \.self) { filterOption in
+                    FilterChip(filterOption: filterOption)
+                }
+                Spacer()
+            }
+            .padding(.vertical, 8)
+        }
+    }
+}
+
 struct FilterChip: View {
     
+    @Environment(TaskListViewModel.self) private var vm
     var filterOption: TaskFilterOption
-    @Binding var selectedFilter: Difficulty?
     
     var isSelected: Bool {
-        return selectedFilter == filterOption.difficulty
+        return vm.selectedFilter == filterOption.difficulty
     }
     
     var body: some View {
-        Button(action: {selectedFilter = filterOption.difficulty }) {
+        Button(action: {vm.selectedFilter = filterOption.difficulty}) {
             HStack {
                 filterOption.icon?
                     .foregroundStyle(isSelected ? filterOption.tier!.subtle : filterOption.tier!.default)
@@ -61,3 +77,4 @@ struct FilterChip: View {
         return isSelected ? tier.default : tier.subtle
     }
 }
+

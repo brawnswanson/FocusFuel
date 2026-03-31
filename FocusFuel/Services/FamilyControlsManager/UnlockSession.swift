@@ -27,9 +27,9 @@ enum SessionDuration: Int, Codable, CaseIterable, Identifiable {
     var fuelCost: Int {
         switch self {
             case .fifteenMinutes: return 50
-        case .thirtyMinutes: return 120
-        case .oneHour: return 300
-        case .twoHours: return 700
+        case .thirtyMinutes: return 90
+        case .oneHour: return 150
+        case .twoHours: return 250
         }
     }
     

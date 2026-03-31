@@ -10,6 +10,7 @@ struct ContentView: View {
         TabView {
             Tab("Tasks", systemImage: "checkmark.square") {
                 TaskListView()
+                    .environment(TaskListViewModel(context: context))
             }
             Tab("Store", systemImage: "basket") {
                 StoreView()

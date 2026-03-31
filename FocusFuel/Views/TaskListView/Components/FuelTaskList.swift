@@ -42,7 +42,7 @@ struct TaskListRow: View {
     
     var body: some View {
         Button(action: {
-            
+            viewModel.changeTaskStatus(task: task)
         }) {
             HStack(spacing:14) {
                 TaskRowCompleteIndicator(task: task)

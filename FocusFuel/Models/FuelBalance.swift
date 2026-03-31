@@ -16,4 +16,13 @@ class FuelBalance {
     var totalSpent: Int = 0
     
     init() {}
+    
+    func updateFuelBalance(adding: Bool, amount: Int) {
+        if adding {
+            currentBalance += amount
+            totalEarned += amount
+        } else {
+            currentBalance -= amount
+        }
+    }
 }

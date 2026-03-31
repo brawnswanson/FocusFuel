@@ -20,6 +20,7 @@ struct FocusFuelApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .preferredColorScheme(.light)
                 .environmentObject(familyControlsManager)
                 .environmentObject(fuelManager)
                 .environmentObject(unlockSessionManager)

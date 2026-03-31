@@ -1,16 +1,22 @@
 //
-//  FuelBadge.swift
-//  FocusFuelPlay
+//  CommonViews.swift
+//  FocusFuel
 //
-//  Created by Daniel Pressner on 18.03.2026.
+//  Created by Daniel Pressner on 31.03.2026.
 //
 
 import SwiftUI
-import SwiftData
+
+struct AppViewDivider: View {
+    var body: some View {
+        Divider()
+            .padding()
+    }
+}
 
 struct FuelBadge: View {
     
-    @EnvironmentObject var fuelManager: FuelManager
+    var fuelBalance: Int
     var size: BadgeSize = .regular
     var staticValue: Int? = nil
     
@@ -20,18 +26,16 @@ struct FuelBadge: View {
                 Image(systemName: "bolt.circle.fill")
                     .font(size.iconFont)
                     .foregroundStyle(Color.Ember.accentDefault)
-                if let value = staticValue {
-                    Text("\(value)")
-                        .font(size.font)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(Color.Ember.accentText)
-                } else {
-                    Text("\(fuelManager.balance)")
-                        .font(size.font)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(Color.Ember.accentText)
+                Group {
+                    if let value = staticValue {
+                        Text("\(value)")
+                    } else {
+                        Text("\(fuelBalance)")
+                    }
                 }
-                
+                .font(size.font)
+                .fontWeight(.semibold)
+                .foregroundStyle(Color.Ember.accentText)
             }
         }
         .padding(.horizontal, size.horizontalPadding)

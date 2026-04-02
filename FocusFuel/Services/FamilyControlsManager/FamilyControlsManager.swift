@@ -9,24 +9,28 @@ import Foundation
 import FamilyControls
 import ManagedSettings
 import Combine
+import SwiftUI
+import SwiftData
 
 @MainActor
-class FamilyControlsManager: ObservableObject {
+@Observable
+class FamilyControlsManager {
     
-    static let shared = FamilyControlsManager()
+    //var context: ModelContext
     
-    @Published var authorizationStatus: AuthorizationStatus = .notDetermined
-    @Published var activitySelection: FamilyActivitySelection = FamilyActivitySelection()
-    @Published var isLocked: Bool = false
+    var authorizationStatus: AuthorizationStatus = .notDetermined
+    var activitySelection: FamilyActivitySelection = FamilyActivitySelection()
+    var isLocked: Bool = false
     
     private let store: ManagedSettingsStore = ManagedSettingsStore()
     private let hasLaunchedKey: String = "hasLaunchedBefore"
     private let selectionKey: String = "savedActivitySelection"
     private let isLockedKey: String = "isLocked"
     private let sharedDefaults: UserDefaults = UserDefaults(suiteName: "pressner.apps.FocusFuel") ?? UserDefaults.standard
-
     
-    private init() {
+    
+    init() {
+       // self.context = context
         updateStatus()
         loadSelection()
         isLocked = UserDefaults.standard.bool(forKey: isLockedKey)
@@ -72,7 +76,7 @@ class FamilyControlsManager: ObservableObject {
             print("Failed to save activity selection: \(error)")
         }
     }
-
+    
     func loadSelection() {
         guard let data: Data = sharedDefaults.data(forKey: selectionKey) else { return }
         do {

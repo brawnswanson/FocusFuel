@@ -9,25 +9,25 @@ import SwiftUI
 
 struct BackpackButtonView: View {
     
-    var action: () -> Void
+    @Binding var inventorySheetIsPresented: Bool
     var inventoryCount: Int
     
     var body: some View {
         Button(action: {
-           // inventorySheetIsPresented = true
+            inventorySheetIsPresented = true
         }) {
             HStack(spacing: 6) {
                 Image(systemName: "backpack")
                     .font(.subheadline)
-         /*       if unlockSessionManager.inventory.count > 0 {
-                    Text("\(unlockSessionManager.inventory.count)")
+                if inventoryCount > 0 {
+                    Text("\(inventoryCount)")
                         .font(.caption)
                         .fontWeight(.bold)
                         .foregroundStyle(Color.Ember.textInverse)
                         .frame(minWidth: 16, minHeight: 16)
                         .background(Color.Ember.accentDefault)
                         .clipShape(Circle())
-                } */
+                }
             }
             .foregroundStyle(Color.Ember.accentDefault)
             .padding(.horizontal, 10)

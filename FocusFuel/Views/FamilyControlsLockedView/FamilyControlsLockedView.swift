@@ -6,11 +6,15 @@
 //
 
 import SwiftUI
-import FamilyControls
 
 struct FamilyControlsLockedView: View {
     
-    @EnvironmentObject var familyControlsManager: FamilyControlsManager
+    @Environment(FamilyControlsManager.self) var familyControlsManager
+    @State private var viewModel: FamilyControlsLockedViewModel
+    
+    init(familyControls: FamilyControlsManager) {
+        _viewModel = .init(initialValue: FamilyControlsLockedViewModel(familyControlsManager: familyControls))
+    }
     
     var body: some View {
         VStack(spacing: 24) {
@@ -27,7 +31,7 @@ struct FamilyControlsLockedView: View {
                     .foregroundStyle(Color.Ember.textSecondary)
                     .multilineTextAlignment(.center)
                 Button(action: {
-                    familyControlsManager.requestAuthorization()
+                    viewModel.requestFamilyControlsAuthorization()
                 }) {
                     Text("Enable Screen Time Access")
                         .font(.subheadline)
@@ -38,7 +42,7 @@ struct FamilyControlsLockedView: View {
                         .background(Color.Ember.accentDefault)
                         .clipShape(RoundedRectangle(cornerRadius: 14))
                 }
-                if familyControlsManager.authorizationStatus == .denied {
+                if viewModel.denied {
                     Text("If the dialog doesn't appear, go to Settings → Screen Time → FocusFuel to enable access.")
                         .font(.caption)
                         .foregroundStyle(Color.Ember.textTertiary)

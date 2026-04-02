@@ -37,12 +37,13 @@ struct FuelTaskList: View {
 
 struct TaskListRow: View {
     
+    @Environment(FuelManager.self) var fuelManager
     var viewModel: TaskListViewModel
     var task: FuelTask
     
     var body: some View {
         Button(action: {
-            viewModel.changeTaskStatus(task: task)
+            viewModel.changeTaskStatus(task: task, fuelManager: fuelManager)
         }) {
             HStack(spacing:14) {
                 TaskRowCompleteIndicator(task: task)

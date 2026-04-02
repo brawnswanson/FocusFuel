@@ -14,13 +14,9 @@ class TaskListViewModel {
     
     private let context: ModelContext
     
+    var fuelBalance: FuelBalance?
     var tasks: [FuelTask] = []
     var selectedFilter: Difficulty? = nil
-    var fuelBalances: [FuelBalance] = []
-    
-    var fuelBalance: FuelBalance? {
-        fuelBalances.first
-    }
     
     var pendingTasks: [FuelTask] {
         filterTasks(tasks, by: selectedFilter).filter { $0.isCompleted == false }
@@ -37,10 +33,6 @@ class TaskListViewModel {
     init(context: ModelContext) {
         self.context = context
         fetchTasks()
-        if let isThereAFuelBalance = fuelBalance {}
-        else {
-            createFirstFuelBalance()
-        }
     }
     
     func fetchTasks() {
@@ -53,25 +45,6 @@ class TaskListViewModel {
         }
     }
     
-    func fetchFuelBalances() {
-        let descriptor = FetchDescriptor<FuelBalance>()
-        do {
-            let results = try context.fetch(descriptor)
-            fuelBalances = results
-        } catch {
-            print("Error fetching tasks")
-        }
-    }
-    
-    func createFirstFuelBalance() {
-        if fuelBalances.isEmpty {
-            let newFuelBalance = FuelBalance()
-            context.insert(newFuelBalance)
-            saveContext()
-            fetchFuelBalances()
-        }
-    }
-    
     func filterTasks(_ tasks:[FuelTask], by selectedFilter: Difficulty?) -> [FuelTask] {
         if let filterBy = selectedFilter {
             return tasks.filter { $0.difficulty == filterBy }
@@ -79,15 +52,15 @@ class TaskListViewModel {
         else { return tasks }
     }
     
-    func changeTaskStatus(task: FuelTask) {
-        if task.isCompleted {
-            fuelBalance?.updateFuelBalance(adding: false, amount: task.difficulty.fuelReward)
+    func changeTaskStatus(task: FuelTask, fuelManager: FuelManager) {
+        print(task.isCompleted)
+        if !task.isCompleted {
+            fuelManager.addFuel(amount: task.difficulty.fuelReward)
         } else {
-            fuelBalance?.updateFuelBalance(adding: true, amount: task.difficulty.fuelReward)
+            fuelManager.deductFuelForTaskToggle(amount: task.difficulty.fuelReward)
         }
         task.isCompleted.toggle()
         saveContext()
-        fetchFuelBalances()
     }
     
     func addTask(taskName: String, notes: String, difficulty: Difficulty) {

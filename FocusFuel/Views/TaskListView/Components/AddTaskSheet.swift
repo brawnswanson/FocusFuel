@@ -15,8 +15,7 @@ struct AddTaskSheet: View {
     @State var selectedDifficulty: Difficulty = .medium
     @State var notes: String = ""
     @FocusState var titleFocused: Bool
-    
-    var viewModel: TaskListViewModel
+    var saveAction: (String, String, Difficulty) -> Void
     
     var isSaveable: Bool {
         if taskName.count > 0 {
@@ -54,20 +53,18 @@ struct AddTaskSheet: View {
                     .foregroundStyle(Color.Ember.textSecondary)
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") { saveTaskClicked() }
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundStyle(isSaveable ? Color.Ember.accentDefault : Color.Ember.textTertiary)
-                        .disabled(!isSaveable)
-                        .animation(.easeInOut(duration: 0.15), value: isSaveable)
+                    Button("Save") {
+                        saveAction(taskName, notes, selectedDifficulty)
+                        isPresented = false
+                    }
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundStyle(isSaveable ? Color.Ember.accentDefault : Color.Ember.textTertiary)
+                    .disabled(!isSaveable)
+                    .animation(.easeInOut(duration: 0.15), value: isSaveable)
                 }
             }
             .onAppear { titleFocused = true }
         }
-    }
-    
-    func saveTaskClicked() {
-        viewModel.addTask(taskName: taskName, notes: notes, difficulty: selectedDifficulty)
-        isPresented = false
     }
 }
 

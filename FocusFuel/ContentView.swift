@@ -3,24 +3,19 @@ import SwiftData
 
 struct ContentView: View {
     
-    @EnvironmentObject var fuelManager: FuelManager
-    @Environment(\.modelContext) private var context: ModelContext
+    @Environment(ContextManager.self) var contextManager
     
     var body: some View {
         TabView {
             Tab("Tasks", systemImage: "checkmark.square") {
-                TaskListView()
-                    .environment(TaskListViewModel(context: context))
+                TaskListView(viewModel: TaskListViewModel(context: contextManager.context))
             }
             Tab("Store", systemImage: "basket") {
-                StoreView()
+                StoreView(viewModel: StoreViewModel(context: contextManager.context))
             }
             Tab("App Lock", systemImage: "lock.shield") {
                 AppLockView()
             }
-        }
-        .onAppear {
-            fuelManager.configure(modelContext: context)
         }
         .tint(Color.Ember.accentDefault)
     }

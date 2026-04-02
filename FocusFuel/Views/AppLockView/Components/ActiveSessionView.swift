@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ActiveSessionView: View {
     
-    @EnvironmentObject var unlockSessionManager: UnlockSessionManager
+    @Environment(UnlockSessionManager.self) var unlockSessionManager
     @Binding var showCancelConfirmation: Bool
     
     var active: ActiveSession

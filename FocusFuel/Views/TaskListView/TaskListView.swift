@@ -10,25 +10,19 @@ import SwiftData
 
 struct TaskListView: View {
     
-    @Environment(\.modelContext) var context
-    @EnvironmentObject var fuelManager: FuelManager
-    @Environment(TaskListViewModel.self) var viewModel
-    
-    var tasks: [FuelTask] {
-        viewModel.tasks
-    }
-    
+    @Environment(FuelManager.self) var fuelManager
+    @State var viewModel: TaskListViewModel
     @State private var isAddTaskSheetPresented: Bool = false
     
     var body: some View {
         NavigationStack {
             VStack {
                 HStack {
-                    FuelBadge(fuelBalance: viewModel.fuelBalance?.currentBalance ?? 0, size: .regular)
+                    FuelBadge(fuelBalance: fuelManager.balance, size: .regular)
                     Spacer()
                     TaskListProgressView(completed: viewModel.completedTasks.count, total: viewModel.totalTasks)
                 }
-                FilterChipBar()
+                FilterChipBar(viewModel: viewModel)
                 FuelTaskList(viewModel: viewModel)
                 AddTaskButton(isPresented: $isAddTaskSheetPresented)
             }
@@ -37,7 +31,8 @@ struct TaskListView: View {
             .background(Color.Ember.appBackground)
         }
         .sheet(isPresented: $isAddTaskSheetPresented) {
-            AddTaskSheet(isPresented: $isAddTaskSheetPresented, viewModel: viewModel)
+            AddTaskSheet(isPresented: $isAddTaskSheetPresented, saveAction: { name, notes, difficulty in
+                viewModel.addTask(taskName: name, notes: notes, difficulty: difficulty)})
         }
     }
 }
@@ -63,12 +58,12 @@ struct TaskListProgressView: View {
     
     var completed: Int
     var total: Int
-
+    
     private var progress: Double {
         guard total > 0 else { return 0 }
         return min(Double(completed) / Double(total), 1.0)
     }
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
@@ -79,14 +74,14 @@ struct TaskListProgressView: View {
                     .foregroundStyle(Color.Ember.textTertiary)
             }
             .font(.system(size: 13, weight: .medium))
-
+            
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     // Track
                     Capsule()
                         .fill(Color.Ember.accentSubtle)
                         .frame(height: 6)
-
+                    
                     // Fill
                     Capsule()
                         .fill(progress == 1 ? Color.Ember.accentDark : Color.Ember.accentDefault)
@@ -99,7 +94,6 @@ struct TaskListProgressView: View {
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
         .background(Color.Ember.appBackground)
-       
     }
 }
 

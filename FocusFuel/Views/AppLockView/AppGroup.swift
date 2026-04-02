@@ -8,6 +8,6 @@
 import Foundation
 
 enum AppGroup {
-    static let identifier  = "group.com.yourname.focusfuel"
+    static let identifier  = "group.pressner.apps.focusfuel"
     static let selectionKey = "focusfuel.activitySelection"
 }

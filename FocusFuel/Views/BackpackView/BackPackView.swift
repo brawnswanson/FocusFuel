@@ -9,16 +9,16 @@ import SwiftUI
 
 struct BackPackView: View {
     
-    @EnvironmentObject var fuelManager: FuelManager
-    @EnvironmentObject var unlockSessionManager: UnlockSessionManager
-    @EnvironmentObject var familyControlsManager: FamilyControlsManager
+    @Environment(FuelManager.self) var fuelManager
+    @Environment(UnlockSessionManager.self) var unlockSessionManager
+    @Environment(FamilyControlsManager.self) var familyControlsManager
     @Environment(\.dismiss) private var dismiss: DismissAction
     
     var body: some View {
         NavigationStack {
             Group {
                 if unlockSessionManager.inventory.isEmpty && !unlockSessionManager.hasActiveSession && unlockSessionManager.queue.isEmpty {
-                    emptyState
+                    BackPackViewEmptyState()
                 } else {
                     inventoryContent
                 }
@@ -83,7 +83,11 @@ struct BackPackView: View {
     
     // MARK: - Empty State
     
-    private var emptyState: some View {
+    
+}
+
+struct BackPackViewEmptyState: View {
+    var body: some View {
         VStack(spacing: 16) {
             Image(systemName: "backpack")
                 .font(.system(size: 50))
@@ -102,7 +106,6 @@ struct BackPackView: View {
         .padding(32)
     }
 }
-
 // MARK: - Section Header
 
 struct SectionHeader: View {
@@ -123,9 +126,9 @@ struct SectionHeader: View {
 
 struct ActiveSessionCard: View {
     
-    @EnvironmentObject var unlockSessionManager: UnlockSessionManager
-    @EnvironmentObject var familyControlsManager: FamilyControlsManager
-    @EnvironmentObject var fuelManager: FuelManager
+    @Environment(UnlockSessionManager.self) var unlockSessionManager
+    @Environment(FamilyControlsManager.self) var familyControlsManager
+    @Environment(FuelManager.self) var fuelManager
     
     let active: ActiveSession
     
@@ -226,7 +229,7 @@ struct QueuedSessionCard: View {
 
 struct InventorySessionCard: View {
     
-    @EnvironmentObject var unlockSessionManager: UnlockSessionManager
+    @Environment(UnlockSessionManager.self) var unlockSessionManager
     
     let session: UnlockSession
     let onActivate: () -> Void

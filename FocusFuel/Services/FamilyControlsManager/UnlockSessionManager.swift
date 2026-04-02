@@ -10,15 +10,16 @@ import FamilyControls
 import ManagedSettings
 import DeviceActivity
 import Combine
+import SwiftData
 
 @MainActor
-class UnlockSessionManager: ObservableObject {
+@Observable
+class UnlockSessionManager {
     
-    static let shared: UnlockSessionManager = UnlockSessionManager()
-    
-    @Published var inventory: [UnlockSession] = []
-    @Published var activeSession: ActiveSession? = nil
-    @Published var queue: [UnlockSession] = []
+   // var context: ModelContext
+    var inventory: [UnlockSession] = []
+    var activeSession: ActiveSession? = nil
+    var queue: [UnlockSession] = []
     
     private let store: ManagedSettingsStore = ManagedSettingsStore()
     private let activityCenter: DeviceActivityCenter = DeviceActivityCenter()
@@ -28,7 +29,7 @@ class UnlockSessionManager: ObservableObject {
     private let activeSessionKey: String = "activeUnlockSession"
     private let queueKey: String = "unlockSessionQueue"
     
-    private init() {
+    init() {
         loadInventory()
         loadActiveSession()
         loadQueue()
@@ -51,21 +52,21 @@ class UnlockSessionManager: ObservableObject {
     
     func activate(session: UnlockSession, familyControlsManager: FamilyControlsManager) {
         guard activeSession == nil else {
-                enqueue(session: session)
-                return
-            }
-            removeFromInventory(sessionId: session.id)
-            let active: ActiveSession = ActiveSession(from: session)
-            activeSession = active
-            saveActiveSession()
-            
-            // Immediately remove the shield
-            store.shield.applications = nil
-            print("Shield removed immediately on activation")
-            
-            scheduleActivity(startDate: active.startDate, endDate: active.endDate)
-            scheduleExpirationCheck(familyControlsManager: familyControlsManager, endDate: active.endDate)
+            enqueue(session: session)
+            return
         }
+        removeFromInventory(sessionId: session.id)
+        let active: ActiveSession = ActiveSession(from: session)
+        activeSession = active
+        saveActiveSession()
+        
+        // Immediately remove the shield
+        store.shield.applications = nil
+        print("Shield removed immediately on activation")
+        
+        scheduleActivity(startDate: active.startDate, endDate: active.endDate)
+        scheduleExpirationCheck(familyControlsManager: familyControlsManager, endDate: active.endDate)
+    }
     
     // MARK: - Scheduling
     
@@ -77,11 +78,11 @@ class UnlockSessionManager: ObservableObject {
             repeats: false
         )
         do {
-                try activityCenter.startMonitoring(activityName, during: schedule)
-                print("Activity scheduled from \(startDate) to \(endDate)")
-            } catch {
-                print("Failed to schedule device activity: \(error)")
-            }
+            try activityCenter.startMonitoring(activityName, during: schedule)
+            print("Activity scheduled from \(startDate) to \(endDate)")
+        } catch {
+            print("Failed to schedule device activity: \(error)")
+        }
     }
     
     private func stopScheduledActivity() {
@@ -137,42 +138,42 @@ class UnlockSessionManager: ObservableObject {
     // MARK: - Persistence
     
     private func saveInventory() {
-        guard let encoded: Data = try? JSONEncoder().encode(inventory) else { return }
-        UserDefaults.standard.set(encoded, forKey: inventoryKey)
+        //   guard let encoded: Data = try? JSONEncoder().encode(inventory) else { return }
+        //   UserDefaults.standard.set(encoded, forKey: inventoryKey)
     }
     
     private func loadInventory() {
-        guard let data: Data = UserDefaults.standard.data(forKey: inventoryKey),
-              let decoded: [UnlockSession] = try? JSONDecoder().decode([UnlockSession].self, from: data)
-        else { return }
-        inventory = decoded
+        //  guard let data: Data = UserDefaults.standard.data(forKey: inventoryKey),
+        //        let decoded: [UnlockSession] = try? JSONDecoder().decode([UnlockSession].self, from: data)
+        //  else { return }
+        //  inventory = decoded
     }
     
     private func saveActiveSession() {
-        guard let encoded: Data = try? JSONEncoder().encode(activeSession) else {
-            UserDefaults.standard.removeObject(forKey: activeSessionKey)
-            return
-        }
-        UserDefaults.standard.set(encoded, forKey: activeSessionKey)
+        // guard let encoded: Data = try? JSONEncoder().encode(activeSession) else {
+        //    UserDefaults.standard.removeObject(forKey: activeSessionKey)
+        //    return
+        // }
+        // UserDefaults.standard.set(encoded, forKey: activeSessionKey)
     }
     
     private func loadActiveSession() {
-        guard let data: Data = UserDefaults.standard.data(forKey: activeSessionKey),
-              let decoded: ActiveSession = try? JSONDecoder().decode(ActiveSession.self, from: data)
-        else { return }
-        activeSession = decoded
+        // guard let data: Data = UserDefaults.standard.data(forKey: activeSessionKey),
+        //       let decoded: ActiveSession = try? JSONDecoder().decode(ActiveSession.self, from: data)
+        // else { return }
+        // activeSession = decoded
     }
     
     private func saveQueue() {
-        guard let encoded: Data = try? JSONEncoder().encode(queue) else { return }
-        UserDefaults.standard.set(encoded, forKey: queueKey)
+        //   guard let encoded: Data = try? JSONEncoder().encode(queue) else { return }
+        //   UserDefaults.standard.set(encoded, forKey: queueKey)
     }
     
     private func loadQueue() {
-        guard let data: Data = UserDefaults.standard.data(forKey: queueKey),
-              let decoded: [UnlockSession] = try? JSONDecoder().decode([UnlockSession].self, from: data)
-        else { return }
-        queue = decoded
+        //  guard let data: Data = UserDefaults.standard.data(forKey: queueKey),
+        //        let decoded: [UnlockSession] = try? JSONDecoder().decode([UnlockSession].self, from: data)
+        //  else { return }
+        //  queue = decoded
     }
     
     // MARK: - Helpers

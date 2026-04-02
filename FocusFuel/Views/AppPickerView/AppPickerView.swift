@@ -10,8 +10,9 @@ import FamilyControls
 
 struct AppPickerView: View {
     
-    @EnvironmentObject var familyControlsManager: FamilyControlsManager
+    @Environment(FamilyControlsManager.self) var familyControlsManager
     @State private var isPickerPresented: Bool = false
+    @State private var activitySelection = FamilyActivitySelection()
     
     var body: some View {
         Group {
@@ -57,13 +58,13 @@ struct AppPickerView: View {
                 .background(Color.Ember.appBackground)
                 .familyActivityPicker(
                     isPresented: $isPickerPresented,
-                    selection: $familyControlsManager.activitySelection
+                    selection: $activitySelection
                 )
                 .onChange(of: familyControlsManager.activitySelection) {
                     familyControlsManager.saveSelection()
                     familyControlsManager.applyShield()}
             } else {
-                FamilyControlsLockedView()
+                FamilyControlsLockedView(familyControls: familyControlsManager)
             }
         }
         

@@ -9,12 +9,14 @@ import SwiftUI
 
 struct FilterChipBar: View {
     
+    var viewModel: TaskListViewModel
+    
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
                 Spacer()
                 ForEach(TaskFilterOption.allCases, id: \.self) { filterOption in
-                    FilterChip(filterOption: filterOption)
+                    FilterChip(viewModel: viewModel, filterOption: filterOption)
                 }
                 Spacer()
             }
@@ -25,15 +27,15 @@ struct FilterChipBar: View {
 
 struct FilterChip: View {
     
-    @Environment(TaskListViewModel.self) private var vm
+    var viewModel: TaskListViewModel
     var filterOption: TaskFilterOption
     
     var isSelected: Bool {
-        return vm.selectedFilter == filterOption.difficulty
+        return  viewModel.selectedFilter == filterOption.difficulty
     }
     
     var body: some View {
-        Button(action: {vm.selectedFilter = filterOption.difficulty}) {
+        Button(action: {viewModel.selectedFilter = filterOption.difficulty}) {
             HStack {
                 filterOption.icon?
                     .foregroundStyle(isSelected ? filterOption.tier!.subtle : filterOption.tier!.default)

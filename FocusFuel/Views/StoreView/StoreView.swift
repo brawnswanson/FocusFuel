@@ -10,105 +10,19 @@ import FamilyControls
 
 struct StoreView: View {
     
-    @EnvironmentObject var fuelManager: FuelManager
-    @EnvironmentObject var unlockSessionManager: UnlockSessionManager
-    @EnvironmentObject var familyControlsManager: FamilyControlsManager
+    @State var viewModel: StoreViewModel
+    @Environment(FuelManager.self) var fuelManager
     
-    @State private var inventorySheetIsPresented: Bool = false
-    @State private var purchaseErrorMessage: String = ""
-    @State private var isPurchaseErrorPresented: Bool = false
+   // @EnvironmentObject var unlockSessionManager: UnlockSessionManager
+    @Environment(FamilyControlsManager.self) var familyControlsManager
     
     var body: some View {
         Group {
             if familyControlsManager.authorizationStatus == .approved {
-                storeContent
+                StoreContent(viewModel: viewModel, fuelBalance: fuelManager.balance)
             } else {
-                FamilyControlsLockedView()
+                FamilyControlsLockedView(familyControls: familyControlsManager)
             }
-        }
-    }
-    
-    // MARK: - Store Content
-    
-    private var storeContent: some View {
-        VStack(spacing: 0) {
-            
-            // MARK: - Top Bar
-            HStack {
-                FuelBadge(fuelBalance: fuelManager.balance, size: .regular)
-                Spacer()
-                Button(action: {
-                    inventorySheetIsPresented.toggle()
-                }) {HStack {
-                    Image(systemName: "backpack")
-                        .font(.subheadline)
-                    if UnlockSessionManager.shared.inventory.count > 0 {
-                        Text("\(UnlockSessionManager.shared.inventory.count)")
-                            .font(.caption)
-                            .fontWeight(.bold)
-                            .foregroundStyle(Color.Ember.textInverse)
-                            .frame(minWidth: 16, minHeight: 16)
-                            .background(Color.Ember.accentDefault)
-                            .clipShape(Circle())
-                    }
-                }
-                    
-                }
-                .foregroundStyle(Color.Ember.accentDefault)
-                .padding(.horizontal, 10)
-                .padding(.vertical, 6)
-                .background(Color.Ember.accentSubtle)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.Ember.borderSubtle, lineWidth: 1)
-                )
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-            
-            Divider()
-                .overlay(Color.Ember.borderSubtle)
-            
-            // MARK: - Session Cards
-            ScrollView {
-                VStack(spacing: 12) {
-                    ForEach(SessionDuration.allCases) { duration in
-                        SessionPurchaseCard(duration: duration) {
-                            handlePurchase(duration: duration)
-                        }
-                    }
-                }
-                .padding(16)
-            }
-        }
-        .background(Color.Ember.appBackground)
-        .sheet(isPresented: $inventorySheetIsPresented) {
-            BackPackView()
-        }
-        .alert("Not Enough Fuel", isPresented: $isPurchaseErrorPresented) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text(purchaseErrorMessage)
-        }
-    }
-    
-    // MARK: - Purchase Handler
-    
-    private func handlePurchase(duration: SessionDuration) {
-        let result: (success: Bool, message: String) = unlockSessionManager.purchase(
-            duration: duration,
-            fuelBalance: fuelManager.balance
-        )
-        if result.success {
-            let didDeduct: Bool = fuelManager.deductFuel(amount: duration.fuelCost)
-            if !didDeduct {
-                purchaseErrorMessage = "Not enough Fuel for a \(duration.displayName) session."
-                isPurchaseErrorPresented = true
-            }
-        } else {
-            purchaseErrorMessage = result.message
-            isPurchaseErrorPresented = true
         }
     }
 }
@@ -117,8 +31,7 @@ struct StoreView: View {
 
 struct SessionPurchaseCard: View {
     
-    @EnvironmentObject var fuelManager: FuelManager
-    
+    var fuelManager: FuelManager
     let duration: SessionDuration
     let onPurchase: () -> Void
     
@@ -160,5 +73,54 @@ struct SessionPurchaseCard: View {
             RoundedRectangle(cornerRadius: 14)
                 .stroke(Color.Ember.borderSubtle, lineWidth: 1)
         )
+    }
+}
+
+struct StoreContent: View {
+    
+    @Environment(FuelManager.self) var fuelManager
+    @Environment(UnlockSessionManager.self) var unlockSessionManager
+    @State var inventorySheetIsPresented: Bool = false
+    @State var isPurchaseErrorPresented: Bool = false
+    @State var purchaseErrorMessage: String = ""
+    
+    var viewModel: StoreViewModel
+    var fuelBalance: Int
+    
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            
+            HStack {
+                FuelBadge(fuelBalance: fuelBalance, size: .regular)
+                Spacer()
+                BackpackButtonView(inventorySheetIsPresented: $inventorySheetIsPresented, inventoryCount: unlockSessionManager.inventory.count)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            
+            Divider()
+                .overlay(Color.Ember.borderSubtle)
+            
+            ScrollView {
+                VStack(spacing: 12) {
+                    ForEach(SessionDuration.allCases) { duration in
+                        SessionPurchaseCard(fuelManager: fuelManager, duration: duration) {
+                            viewModel.handlePurchase(duration: duration)
+                        }
+                    }
+                }
+                .padding(16)
+            }
+        }
+        .background(Color.Ember.appBackground)
+        .sheet(isPresented: $inventorySheetIsPresented) {
+            BackPackView()
+        }
+        .alert("Not Enough Fuel", isPresented: $isPurchaseErrorPresented) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(purchaseErrorMessage)
+        }
     }
 }

@@ -12,23 +12,27 @@ import SwiftData
 struct FocusFuelApp: App {
     
     @Environment(\.scenePhase) private var scenePhase
-    @StateObject private var familyControlsManager = FamilyControlsManager.shared
-    @StateObject private var fuelManager: FuelManager = FuelManager.shared
-    @StateObject private var unlockSessionManager: UnlockSessionManager = UnlockSessionManager.shared
+    @State private var fuelManager: FuelManager
+    @State private var familyControlsManager = FamilyControlsManager()
+    @State private var unlockSessionManager = UnlockSessionManager()
+    @State private var contextManager: ContextManager
     
+    init() {
+        let contextManager = ContextManager()
+        _contextManager = State(initialValue: contextManager)
+        _fuelManager = State(initialValue: FuelManager(context: contextManager.context))
+    }
     
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .preferredColorScheme(.light)
-                .environmentObject(familyControlsManager)
-                .environmentObject(fuelManager)
-                .environmentObject(unlockSessionManager)
+                .environment(fuelManager)
+                .environment(contextManager)
                 .task {
                     familyControlsManager.checkFirstLaunch()
                 }
         }
-        .modelContainer(for: [FuelBalance.self, FuelTask.self])
         .onChange(of: scenePhase) {
             if scenePhase == .active {
                 familyControlsManager.updateStatus()

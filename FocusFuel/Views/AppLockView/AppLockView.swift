@@ -10,9 +10,9 @@ import FamilyControls
 
 struct AppLockView: View {
     
-    @EnvironmentObject var familyControlsManager: FamilyControlsManager
-    @EnvironmentObject var unlockSessionManager: UnlockSessionManager
-    @EnvironmentObject var fuelManager: FuelManager
+    @Environment(FamilyControlsManager.self) var familyControlsManager
+    @Environment(UnlockSessionManager.self) var unlockSessionManager
+    @Environment(FuelManager.self) var fuelManager
     
     @State private var inventorySheetIsPresented: Bool = false
     @State private var showCancelConfirmation: Bool = false
@@ -23,7 +23,7 @@ struct AppLockView: View {
             if familyControlsManager.authorizationStatus == .approved {
                 LockContentView(inventorySheetIsPresented: $inventorySheetIsPresented, showCancelConfirmation: $showCancelConfirmation, isAppPickerSheetPresented: $isAppPickerSheetPresented)
             } else {
-                FamilyControlsLockedView()
+                FamilyControlsLockedView(familyControls: familyControlsManager)
             }
         }
     }

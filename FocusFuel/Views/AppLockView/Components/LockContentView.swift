@@ -9,9 +9,9 @@ import SwiftUI
 
 struct LockContentView: View {
     
-    @EnvironmentObject var unlockSessionManager: UnlockSessionManager
-    @EnvironmentObject var familyControlsManager: FamilyControlsManager
-    @EnvironmentObject var fuelManager: FuelManager
+    @Environment(UnlockSessionManager.self) var unlockSessionManager
+    @Environment(FamilyControlsManager.self) var familyControlsManager: FamilyControlsManager
+    @Environment(FuelManager.self) var fuelManager
     
     @Binding var inventorySheetIsPresented: Bool
     @Binding var showCancelConfirmation: Bool

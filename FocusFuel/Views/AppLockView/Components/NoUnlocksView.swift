@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NoUnlocksView: View {
 
-    @EnvironmentObject var familyControlsManager: FamilyControlsManager
+    @Environment(FamilyControlsManager.self) var familyControlsManager
     
 var body: some View {
     VStack(spacing: 24) {

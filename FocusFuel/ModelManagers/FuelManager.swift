@@ -52,37 +52,35 @@ class FuelManager {
         }
     }
     
-    // MARK: - Transactions
-    
     func addFuel(amount: Int) {
         guard let fuel: FuelBalance = fuelBalance else { return }
         fuel.currentBalance += amount
         fuel.totalEarned += amount
-        save(context: context)
+        saveFuelBalance()
     }
     
     func deductFuelForTaskToggle(amount: Int) {
         guard let fuel: FuelBalance = fuelBalance else { return }
         fuel.currentBalance = fuel.currentBalance > amount ? fuel.currentBalance - amount : 0
-        save(context: context)
+        saveFuelBalance()
     }
     
-    func deductFuel(amount: Int) -> Bool {
-        guard let fuel: FuelBalance = fuelBalance else { return false }
-        guard fuel.currentBalance >= amount else { return false }
+    func deductFuel(amount: Int) {
+        guard let fuel: FuelBalance = fuelBalance else { return }
+        guard fuel.currentBalance >= amount else { return }
         fuel.currentBalance -= amount
         fuel.totalSpent += amount
-        save(context: context)
-        return true
+        saveFuelBalance()
+        loadOrCreateBalance()
     }
     
     func refundFuel(amount: Int) {
         guard let fuel: FuelBalance = fuelBalance else { return }
         fuel.currentBalance += amount
-        save(context: context)
+        saveFuelBalance()
     }
     
-    private func save(context: ModelContext) {
+    private func saveFuelBalance() {
         do {
             try context.save()
         } catch {

@@ -17,7 +17,7 @@ class ContextManager {
     let context: ModelContext
     
     init() {
-        self.container = try! ModelContainer(for: FuelTask.self, FuelBalance.self)
+        self.container = try! ModelContainer(for: FuelTask.self, FuelBalance.self, UnlockSession.self, ActiveSession.self, QueuedSession.self)
         self.context = container.mainContext
     }
     

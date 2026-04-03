@@ -9,18 +9,16 @@ import SwiftUI
 
 struct BackPackView: View {
     
-    @Environment(FuelManager.self) var fuelManager
-    @Environment(UnlockSessionManager.self) var unlockSessionManager
-    @Environment(FamilyControlsManager.self) var familyControlsManager
+    @State var viewModel: BackPackViewModel
     @Environment(\.dismiss) private var dismiss: DismissAction
     
     var body: some View {
         NavigationStack {
             Group {
-                if unlockSessionManager.inventory.isEmpty && !unlockSessionManager.hasActiveSession && unlockSessionManager.queue.isEmpty {
+                if viewModel.displayEmptyState {
                     BackPackViewEmptyState()
                 } else {
-                    inventoryContent
+                    InventoryContent(viewModel: $viewModel)
                 }
             }
             .navigationTitle("Backpack")
@@ -36,41 +34,42 @@ struct BackPackView: View {
             .background(Color.Ember.appBackground)
         }
     }
+}
+
+struct InventoryContent: View {
     
-    // MARK: - Inventory Content
+    @Binding var viewModel: BackPackViewModel
+    @Environment(FamilyControlsManager.self) var familyControlsManager
     
-    private var inventoryContent: some View {
+    var body: some View {
         ScrollView {
             VStack(spacing: 20) {
                 
                 // MARK: - Active Session
-                if let active: ActiveSession = unlockSessionManager.activeSession {
+                if let active = viewModel.activeSession {
                     VStack(alignment: .leading, spacing: 12) {
                         SectionHeader(title: "Active Session")
-                        ActiveSessionCard(active: active)
+                        ActiveSessionCard(viewModel: $viewModel, active: active)
                     }
                 }
                 
                 // MARK: - Queued Sessions
-                if !unlockSessionManager.queue.isEmpty {
+                if !viewModel.queue.isEmpty {
                     VStack(alignment: .leading, spacing: 12) {
                         SectionHeader(title: "Up Next")
-                        ForEach(unlockSessionManager.queue) { session in
-                            QueuedSessionCard(session: session)
+                        ForEach(viewModel.queue) { session in
+                            QueuedSessionCard(viewModel: $viewModel, session: session)
                         }
                     }
                 }
                 
                 // MARK: - Available Sessions
-                if !unlockSessionManager.inventory.isEmpty {
+                if !viewModel.inventory.isEmpty {
                     VStack(alignment: .leading, spacing: 12) {
                         SectionHeader(title: "Available")
-                        ForEach(unlockSessionManager.inventory) { session in
-                            InventorySessionCard(session: session) {
-                                unlockSessionManager.activate(
-                                    session: session,
-                                    familyControlsManager: familyControlsManager
-                                )
+                        ForEach(viewModel.inventory) { session in
+                            InventorySessionCard(viewModel: $viewModel, session: session) {
+                                viewModel.activate(session: session, familyControlsManager: familyControlsManager)
                             }
                         }
                     }
@@ -80,10 +79,6 @@ struct BackPackView: View {
         }
         .background(Color.Ember.appBackground)
     }
-    
-    // MARK: - Empty State
-    
-    
 }
 
 struct BackPackViewEmptyState: View {
@@ -106,7 +101,6 @@ struct BackPackViewEmptyState: View {
         .padding(32)
     }
 }
-// MARK: - Section Header
 
 struct SectionHeader: View {
     
@@ -122,13 +116,9 @@ struct SectionHeader: View {
     }
 }
 
-// MARK: - Active Session Card
-
 struct ActiveSessionCard: View {
     
-    @Environment(UnlockSessionManager.self) var unlockSessionManager
-    @Environment(FamilyControlsManager.self) var familyControlsManager
-    @Environment(FuelManager.self) var fuelManager
+    @Binding var viewModel: BackPackViewModel
     
     let active: ActiveSession
     
@@ -168,10 +158,8 @@ struct ActiveSessionCard: View {
                 }
                 Spacer()
                 Button(action: {
-                    let refund: Int = unlockSessionManager.cancelActiveSession(
-                        familyControlsManager: familyControlsManager
-                    )
-                    fuelManager.refundFuel(amount: refund)
+                    let refund: Int = viewModel.cancelActiveSession()
+                    viewModel.refundFuel(amount: refund)
                 }) {
                     Text("End Session")
                         .font(.caption)
@@ -198,7 +186,8 @@ struct ActiveSessionCard: View {
 
 struct QueuedSessionCard: View {
     
-    let session: UnlockSession
+    @Binding var viewModel: BackPackViewModel
+    let session: QueuedSession
     
     var body: some View {
         HStack {
@@ -229,7 +218,7 @@ struct QueuedSessionCard: View {
 
 struct InventorySessionCard: View {
     
-    @Environment(UnlockSessionManager.self) var unlockSessionManager
+    @Binding var viewModel: BackPackViewModel
     
     let session: UnlockSession
     let onActivate: () -> Void
@@ -247,7 +236,7 @@ struct InventorySessionCard: View {
             }
             Spacer()
             Button(action: onActivate) {
-                Text(unlockSessionManager.hasActiveSession ? "Queue" : "Activate")
+                Text(viewModel.unlockSessionManager.hasActiveSession ? "Queue" : "Activate")
                     .font(.caption)
                     .fontWeight(.semibold)
                     .foregroundStyle(Color.Ember.textInverse)

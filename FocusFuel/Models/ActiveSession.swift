@@ -6,13 +6,15 @@
 //
 
 import Foundation
+import SwiftData
 
-struct ActiveSession: Codable {
-    let sessionId: UUID
-    let duration: SessionDuration
-    let startDate: Date
-    let endDate: Date
-    let fuelCost: Int
+@Model
+class ActiveSession {
+    var sessionId: UUID
+    var duration: SessionDuration
+    var startDate: Date
+    var endDate: Date
+    var fuelCost: Int
     
     init(from session: UnlockSession) {
         self.sessionId = session.id

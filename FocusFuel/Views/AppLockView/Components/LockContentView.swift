@@ -80,7 +80,7 @@ struct LockContentView: View {
         }
         .background(Color.Ember.appBackground)
         .sheet(isPresented: $inventorySheetIsPresented) {
-            BackPackView()
+            BackPackView(viewModel: BackPackViewModel(unlockSessionManager: unlockSessionManager, fuelManager: fuelManager, familyControlsManager: familyControlsManager))
         }
         .sheet(isPresented: $isAppPickerSheetPresented) {
             AppPickerView()

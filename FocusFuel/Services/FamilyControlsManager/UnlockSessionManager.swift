@@ -16,10 +16,10 @@ import SwiftData
 @Observable
 class UnlockSessionManager {
     
-   // var context: ModelContext
+    var context: ModelContext
     var inventory: [UnlockSession] = []
     var activeSession: ActiveSession? = nil
-    var queue: [UnlockSession] = []
+    var queue: [QueuedSession] = []
     
     private let store: ManagedSettingsStore = ManagedSettingsStore()
     private let activityCenter: DeviceActivityCenter = DeviceActivityCenter()
@@ -29,7 +29,8 @@ class UnlockSessionManager {
     private let activeSessionKey: String = "activeUnlockSession"
     private let queueKey: String = "unlockSessionQueue"
     
-    init() {
+    init(context: ModelContext) {
+        self.context = context
         loadInventory()
         loadActiveSession()
         loadQueue()
@@ -37,15 +38,10 @@ class UnlockSessionManager {
     
     // MARK: - Purchasing
     
-    func purchase(duration: SessionDuration, fuelBalance: Int) -> (success: Bool, message: String) {
-        let cost: Int = duration.fuelCost
-        guard fuelBalance >= cost else {
-            return (false, "Not enough Fuel. You need \(cost) Fuel for a \(duration.displayName) session.")
-        }
+    func purchase(duration: SessionDuration) {
         let session: UnlockSession = UnlockSession(duration: duration)
-        inventory.append(session)
+        context.insert(session)
         saveInventory()
-        return (true, "")
     }
     
     // MARK: - Activation
@@ -93,15 +89,15 @@ class UnlockSessionManager {
     
     private func enqueue(session: UnlockSession) {
         removeFromInventory(sessionId: session.id)
-        queue.append(session)
+     //   queue.append(session)
         saveQueue()
     }
     
     private func activateNext(familyControlsManager: FamilyControlsManager) {
         guard !queue.isEmpty else { return }
-        let next: UnlockSession = queue.removeFirst()
+      //  let next: UnlockSession = queue.removeFirst()
         saveQueue()
-        activate(session: next, familyControlsManager: familyControlsManager)
+       // activate(session: next, familyControlsManager: familyControlsManager)
     }
     
     // MARK: - Cancellation & Refund
@@ -138,15 +134,22 @@ class UnlockSessionManager {
     // MARK: - Persistence
     
     private func saveInventory() {
-        //   guard let encoded: Data = try? JSONEncoder().encode(inventory) else { return }
-        //   UserDefaults.standard.set(encoded, forKey: inventoryKey)
+        do {
+            try context.save()
+            loadInventory()
+        } catch {
+            print("Error saving unlock sessions")
+        }
     }
     
     private func loadInventory() {
-        //  guard let data: Data = UserDefaults.standard.data(forKey: inventoryKey),
-        //        let decoded: [UnlockSession] = try? JSONDecoder().decode([UnlockSession].self, from: data)
-        //  else { return }
-        //  inventory = decoded
+        let descriptor = FetchDescriptor<UnlockSession>()
+        do {
+            let results = try context.fetch(descriptor)
+            inventory = results
+        } catch {
+            print("Error fetching Inventory")
+        }
     }
     
     private func saveActiveSession() {
@@ -158,10 +161,15 @@ class UnlockSessionManager {
     }
     
     private func loadActiveSession() {
-        // guard let data: Data = UserDefaults.standard.data(forKey: activeSessionKey),
-        //       let decoded: ActiveSession = try? JSONDecoder().decode(ActiveSession.self, from: data)
-        // else { return }
-        // activeSession = decoded
+        let descriptor = FetchDescriptor<ActiveSession>()
+        do {
+            let results = try context.fetch(descriptor)
+            if let first = results.first {
+                activeSession = first
+            }
+        } catch {
+            print("Error fetching Inventory")
+        }
     }
     
     private func saveQueue() {
@@ -170,10 +178,17 @@ class UnlockSessionManager {
     }
     
     private func loadQueue() {
-        //  guard let data: Data = UserDefaults.standard.data(forKey: queueKey),
-        //        let decoded: [UnlockSession] = try? JSONDecoder().decode([UnlockSession].self, from: data)
-        //  else { return }
-        //  queue = decoded
+        let descriptor = FetchDescriptor<QueuedSession>()
+        do {
+            let results = try context.fetch(descriptor)
+            if !results.isEmpty {
+                queue = results
+            } else {
+                queue = []
+            }
+        } catch {
+            print("Error fetching Inventory")
+        }
     }
     
     // MARK: - Helpers

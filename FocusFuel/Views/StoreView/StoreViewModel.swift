@@ -9,30 +9,26 @@ import Foundation
 import SwiftUI
 import SwiftData
 
+@MainActor
 @Observable
 class StoreViewModel {
     
-    private let context: ModelContext
+    let fuelManager: FuelManager
+    let unlockSessionManager: UnlockSessionManager
+    let familyControlsManager: FamilyControlsManager
     
+    var purchaseErrorMessage: String = ""
+    var isPurchaseErrorPresented: Bool = false
+    var inventorySheetIsPresented: Bool = false
     
-    init(context: ModelContext) {
-        self.context = context
+    init(context: ModelContext, fuelManager: FuelManager, unlockSessionManager: UnlockSessionManager, familyControlsManager: FamilyControlsManager) {
+        self.fuelManager = fuelManager
+        self.unlockSessionManager = unlockSessionManager
+        self.familyControlsManager = familyControlsManager
     }
     
     func handlePurchase(duration: SessionDuration) {
-      /*  let result: (success: Bool, message: String) = unlockSessionManager.purchase(
-            duration: duration,
-            fuelBalance: FuelManager.shared.balance
-        )
-        if result.success {
-            let didDeduct: Bool = FuelManager.shared.deductFuel(amount: duration.fuelCost)
-            if !didDeduct {
-                purchaseErrorMessage = "Not enough Fuel for a \(duration.displayName) session."
-                isPurchaseErrorPresented = true
-            }
-        } else {
-            purchaseErrorMessage = result.message
-            isPurchaseErrorPresented = true
-        } */
+        unlockSessionManager.purchase(duration: duration)
+       fuelManager.deductFuel(amount: duration.fuelCost)
     }
 }
